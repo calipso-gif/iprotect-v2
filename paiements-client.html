@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paiements | I-PROTECT</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#f9fafb;
+  color:#111827;
+}
+
+/* HEADER */
+.header{
+  background:white;
+  padding:15px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-box{
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  background:#f3e8ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.logo-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.logo small{
+  color:#6b7280;
+}
+
+/* MAIN */
+.container{
+  max-width:1150px;
+  margin:auto;
+  padding:25px;
+}
+
+/* HERO */
+.hero{
+  background:linear-gradient(135deg,#7c3aed,#4c1d95);
+  color:white;
+  padding:30px;
+  border-radius:28px;
+  margin-bottom:25px;
+  box-shadow:0 22px 55px rgba(124,58,237,0.28);
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:flex-end;
+}
+
+.hero h1{
+  font-size:30px;
+  margin-bottom:8px;
+}
+
+.hero p{
+  opacity:0.92;
+  line-height:1.5;
+  max-width:720px;
+}
+
+.hero-badge{
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.22);
+  padding:12px 16px;
+  border-radius:18px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+/* NOTICE */
+.notice{
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  padding:16px;
+  border-radius:18px;
+  line-height:1.5;
+  margin-bottom:22px;
+}
+
+/* SUMMARY CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(220px, 1fr));
+  gap:18px;
+  margin-bottom:24px;
+  max-width:720px;
+}
+
+.card{
+  background:white;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  border:1px solid #f1f1f1;
+}
+
+.card h3{
+  color:#6b7280;
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+.card p{
+  font-size:25px;
+  font-weight:900;
+}
+
+.card.danger p{
+  color:#dc2626;
+}
+
+.card.purple p{
+  color:#6d28d9;
+}
+
+/* PANELS */
+.panel{
+  background:white;
+  padding:24px;
+  border-radius:24px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  margin-bottom:24px;
+  border:1px solid #f1f1f1;
+}
+
+.panel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.panel h2{
+  font-size:21px;
+  margin-bottom:5px;
+}
+
+.panel-subtitle{
+  color:#6b7280;
+  font-size:14px;
+  line-height:1.5;
+}
+
+/* TABLES */
+.table-wrap{
+  overflow-x:auto;
+  border-radius:18px;
+  border:1px solid #e5e7eb;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  background:white;
+}
+
+th, td{
+  padding:15px;
+  text-align:left;
+  border-bottom:1px solid #e5e7eb;
+  white-space:nowrap;
+}
+
+tr:last-child td{
+  border-bottom:none;
+}
+
+th{
+  background:#f9fafb;
+  color:#6b7280;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+
+td strong{
+  font-weight:900;
+}
+
+/* BUTTONS */
+.btn{
+  padding:12px 16px;
+  border:none;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:0.2s ease;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.btn-purple{
+  background:#7c3aed;
+  color:white;
+}
+
+.btn-green{
+  background:#16a34a;
+  color:white;
+}
+
+.btn-light{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+.btn-dark{
+  background:#111827;
+  color:white;
+}
+
+.btn:disabled{
+  opacity:0.45;
+  cursor:not-allowed;
+  transform:none;
+}
+
+/* STATUS */
+.status{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.active{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.pending{
+  background:#fef3c7;
+  color:#92400e;
+}
+
+.suspended{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+/* ADVANCE PAYMENT */
+.advance-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:14px;
+}
+
+.advance-card{
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+  border-radius:20px;
+  padding:18px;
+}
+
+.advance-card h3{
+  font-size:16px;
+  margin-bottom:6px;
+}
+
+.advance-card p{
+  color:#6b7280;
+  font-size:13px;
+  margin-bottom:14px;
+  line-height:1.4;
+}
+
+.empty{
+  color:#6b7280;
+  padding:15px;
+}
+
+/* FOOT NOTE */
+.footer-note{
+  color:#6b7280;
+  font-size:13px;
+  line-height:1.6;
+  margin-top:8px;
+}
+
+/* MOBILE */
+@media(max-width:760px){
+  .header{
+    padding:14px;
+  }
+
+  .container{
+    padding:15px;
+  }
+
+  .hero{
+    flex-direction:column;
+    align-items:flex-start;
+    padding:24px;
+  }
+
+  .hero h1{
+    font-size:25px;
+  }
+
+  .hero-badge{
+    white-space:normal;
+  }
+
+  .cards{
+    grid-template-columns:1fr;
+    max-width:100%;
+  }
+
+  .panel{
+    padding:18px;
+  }
+
+  .panel-header{
+    flex-direction:column;
+  }
+}
+.invoice-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:16px;
+}
+
+.invoice-card{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 10px 28px rgba(0,0,0,0.04);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.invoice-card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+
+.invoice-card-title{
+  font-size:16px;
+  font-weight:900;
+  line-height:1.3;
+}
+
+.invoice-card-subtitle{
+  color:#6b7280;
+  font-size:13px;
+  margin-top:4px;
+  line-height:1.4;
+}
+
+.invoice-details{
+  background:#f9fafb;
+  border-radius:16px;
+  padding:14px;
+  display:grid;
+  gap:10px;
+}
+
+.invoice-line{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  font-size:14px;
+}
+
+.invoice-line span:first-child{
+  color:#6b7280;
+}
+
+.invoice-line strong{
+  text-align:right;
+}
+
+.invoice-total{
+  border-top:1px solid #e5e7eb;
+  padding-top:12px;
+  margin-top:4px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:16px;
+}
+
+.invoice-total strong{
+  font-size:20px;
+  color:#7c3aed;
+}
+
+.invoice-pay-btn{
+  width:100%;
+  padding:15px;
+  border-radius:16px;
+  font-size:15px;
+}
+
+.invoice-empty{
+  background:#f9fafb;
+  border:1px dashed #c4b5fd;
+  color:#6b7280;
+  padding:22px;
+  border-radius:20px;
+  text-align:center;
+  line-height:1.5;
+}
+
+@media(max-width:700px){
+  .invoice-cards{
+    grid-template-columns:1fr;
+  }
+
+  .invoice-card{
+    padding:16px;
+  }
+
+  .invoice-card-header{
+    flex-direction:column;
+  }
+
+  .invoice-pay-btn{
+    padding:16px;
+    font-size:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-box">
+      <img src="logo.png" alt="Logo I-PROTECT">
+    </div>
+    <div>
+      <strong>I-PROTECT</strong><br>
+      <small>Paiements client</small>
+    </div>
+  </div>
+
+  <a href="dashboard-client.html" class="btn btn-light">← Retour</a>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div>
+      <h1>Mes paiements</h1>
+      <p>
+        Consultez vos factures non réglées, payez vos échéances et retrouvez votre historique.
+        Les pénalités sont calculées automatiquement après la période de grâce.
+      </p>
+    </div>
+
+    <div class="hero-badge">
+      Échéance fixe : chaque 30
+    </div>
+  </section>
+
+  <div class="notice">
+    Le cycle de paiement reste fixé au <strong>30 de chaque mois</strong>.
+    Après <strong>15 jours de retard</strong>, une pénalité de <strong>100 FCFA par jour</strong> est appliquée.
+    Le paiement à l’avance repousse la prochaine échéance.
+  </div>
+
+  <div class="cards">
+    <div class="card danger">
+      <h3>Total impayé</h3>
+      <p id="total-unpaid">...</p>
+    </div>
+
+    <div class="card purple">
+      <h3>Factures non réglées</h3>
+      <p id="unpaid-count">...</p>
+    </div>
+  </div>
+
+  <section class="panel">
+  <div class="panel-header">
+    <div>
+      <h2>Factures non réglées</h2>
+      <p class="panel-subtitle">
+        Réglez vos échéances en attente. Le bouton de paiement est visible directement sur chaque facture.
+      </p>
+    </div>
+  </div>
+
+  <div id="unpaid-invoices-list" class="invoice-cards"></div>
+</section>
+
+
+  <section class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Paiement à l’avance</h2>
+        <p class="panel-subtitle">
+          Payez une échéance future pour garder votre abonnement à jour plus longtemps.
+          Si une facture en retard existe, elle doit être réglée en priorité.
+        </p>
+      </div>
+    </div>
+
+    <div id="advance-payments-list" class="advance-grid"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Historique des paiements</h2>
+        <p class="panel-subtitle">
+          Retrouvez ici les paiements déjà enregistrés, avec la date et l’heure.
+        </p>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date paiement</th>
+            <th>Appareil</th>
+            <th>Formule</th>
+            <th>Échéance réglée</th>
+            <th>Montant</th>
+            <th>Pénalité</th>
+            <th>Total payé</th>
+          </tr>
+        </thead>
+
+        <tbody id="paid-invoices-list"></tbody>
+      </table>
+    </div>
+
+    <p class="footer-note">
+      Les paiements affichés ici sont enregistrés dans le système I-PROTECT.
+    </p>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://tzwltqnkolkgemdhiimp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6d2x0cW5rb2xrZ2VtZGhpaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMzk3MDIsImV4cCI6MjA5MjkxNTcwMn0.9_xIrz6030zEoGFhD6iPN3cq6Z8_aZsDuLVipeY5D0o";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUserId = null;
+let currentProfile = null;
+let currentDevices = [];
+let allInvoices = [];
+
+function cleanValue(value) {
+  return (value || "").toString().trim().toLowerCase();
+}
+
+function formatMoney(amount) {
+  return Number(amount || 0).toLocaleString("fr-FR") + " FCFA";
+}
+
+function formatDate(dateValue) {
+  if (!dateValue) return "-";
+  return new Date(dateValue).toLocaleDateString("fr-FR");
+}
+
+function formatDateTime(dateValue) {
+  if (!dateValue) return "-";
+  return new Date(dateValue).toLocaleString("fr-FR");
+}
+
+function getPlanPrice(plan) {
+  const cleanPlan = cleanValue(plan);
+
+  if (cleanPlan === "starter") return 2900;
+  if (cleanPlan === "plus") return 5900;
+  if (cleanPlan === "elite") return 9900;
+
+  return 0;
+}
+
+function getInvoiceStatusClass(invoice) {
+  const today = new Date();
+  const due = new Date(invoice.due_date);
+
+  today.setHours(0,0,0,0);
+  due.setHours(0,0,0,0);
+
+  const diffDays = Math.floor((today - due) / (1000 * 60 * 60 * 24));
+
+  if (invoice.status === "paid") return "active";
+  if (diffDays > 15) return "suspended";
+  if (diffDays > 0) return "pending";
+  return "active";
+}
+
+function getInvoiceStatusLabel(invoice) {
+  const today = new Date();
+  const due = new Date(invoice.due_date);
+
+  today.setHours(0,0,0,0);
+  due.setHours(0,0,0,0);
+
+  const diffDays = Math.floor((today - due) / (1000 * 60 * 60 * 24));
+
+  if (invoice.status === "paid") return "payée";
+  if (diffDays > 15) return "en retard";
+  if (diffDays > 0) return "période de grâce";
+  return "à venir";
+}
+
+function calculatePenalty(dueDate) {
+  const today = new Date();
+  const due = new Date(dueDate);
+
+  today.setHours(0,0,0,0);
+  due.setHours(0,0,0,0);
+
+  const diffDays = Math.floor((today - due) / (1000 * 60 * 60 * 24));
+  const penaltyDays = Math.max(diffDays - 15, 0);
+
+  return penaltyDays * 100;
+}
+
+function getNextFixedDueDate(dateValue) {
+  const base = new Date(dateValue);
+
+  let targetYear = base.getFullYear();
+  let targetMonth = base.getMonth() + 1;
+
+  if (targetMonth > 11) {
+    targetMonth = 0;
+    targetYear += 1;
+  }
+
+  const lastDay = new Date(targetYear, targetMonth + 1, 0).getDate();
+  const day = Math.min(30, lastDay);
+
+  const year = targetYear;
+  const month = String(targetMonth + 1).padStart(2, "0");
+  const finalDay = String(day).padStart(2, "0");
+
+  return `${year}-${month}-${finalDay}`;
+}
+
+async function checkUser() {
+  const { data: { user }, error } = await supabaseClient.auth.getUser();
+
+  if (error || !user) {
+    window.location.href = "connexion.html";
+    return;
+  }
+
+  currentUserId = user.id;
+
+await refreshPaymentStatuses();
+await loadProfile();
+await loadDevices();
+await ensureInvoices();
+await loadInvoices();
+
+  displayInvoices();
+  displayAdvancePayments();
+}
+
+async function loadProfile() {
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", currentUserId)
+    .single();
+
+  if (error) {
+    alert("Erreur profil : " + error.message);
+    return;
+  }
+
+  currentProfile = data;
+}
+
+async function loadDevices() {
+  const { data, error } = await supabaseClient
+    .from("devices")
+    .select("*")
+    .eq("user_id", currentUserId)
+    .order("created_at", { ascending:false });
+
+  if (error) {
+    alert("Erreur appareils : " + error.message);
+    return;
+  }
+
+  currentDevices = data || [];
+}
+
+async function invoiceExists(targetType, deviceId, dueDate) {
+  let query = supabaseClient
+    .from("invoices")
+    .select("id")
+    .eq("user_id", currentUserId)
+    .eq("target_type", targetType)
+    .eq("due_date", dueDate)
+    .limit(1);
+
+  if (deviceId) {
+    query = query.eq("device_id", deviceId);
+  } else {
+    query = query.is("device_id", null);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    alert("Erreur vérification facture : " + error.message);
+    return true;
+  }
+
+  return data.length > 0;
+}
+
+async function activationInvoiceExists(targetType, deviceId) {
+  let query = supabaseClient
+    .from("invoices")
+    .select("id")
+    .eq("user_id", currentUserId)
+    .eq("target_type", targetType)
+    .eq("invoice_type", "activation")
+    .limit(1);
+
+  if (deviceId) {
+    query = query.eq("device_id", deviceId);
+  } else {
+    query = query.is("device_id", null);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    alert("Erreur vérification facture activation : " + error.message);
+    return true;
+  }
+
+  return data.length > 0;
+}
+
+async function createInvoice(target) {
+  const amount = getPlanPrice(target.plan);
+
+  if (!target.next_payment_date || amount <= 0) return;
+
+  const exists = await invoiceExists(
+    target.target_type,
+    target.device_id,
+    target.next_payment_date
+  );
+
+  if (exists) return;
+
+  const { error } = await supabaseClient
+    .from("invoices")
+    .insert({
+      user_id: currentUserId,
+      device_id: target.device_id,
+      target_type: target.target_type,
+      target_label: target.target_label,
+      plan: target.plan,
+      amount: amount,
+      penalty_amount: 0,
+      total_amount: amount,
+      due_date: target.next_payment_date,
+      status: "unpaid",
+invoice_type: target.invoice_type || "subscription"
+    });
+
+  if (error) {
+    alert("Erreur création facture : " + error.message);
+  }
+}
+
+async function ensureInvoices() {
+  const profileStatus = cleanValue(currentProfile?.status);
+
+  // =========================
+  // FACTURE D'ACTIVATION CLIENT PRINCIPAL
+  // Une seule fois seulement
+  // =========================
+  if (
+    currentProfile &&
+    profileStatus === "en_attente" &&
+    !currentProfile.next_payment_date
+  ) {
+    const alreadyHasActivationInvoice = await activationInvoiceExists("profile", null);
+
+    if (!alreadyHasActivationInvoice) {
+      const activationDueDate = currentProfile.created_at
+        ? currentProfile.created_at.split("T")[0]
+        : new Date().toISOString().split("T")[0];
+
+      await createInvoice({
+        target_type: "profile",
+        device_id: null,
+        target_label: `${currentProfile.phone_model || "Appareil principal"} / ${currentProfile.imei || "-"}`,
+        plan: currentProfile.plan,
+        next_payment_date: activationDueDate,
+        invoice_type: "activation"
+      });
+    }
+  }
+
+  // =========================
+  // FACTURE NORMALE CLIENT PRINCIPAL
+  // Seulement après activation admin
+  // =========================
+  if (
+    currentProfile &&
+    profileStatus === "actif" &&
+    currentProfile.next_payment_date
+  ) {
+    await createInvoice({
+      target_type: "profile",
+      device_id: null,
+      target_label: `${currentProfile.phone_model || "Appareil principal"} / ${currentProfile.imei || "-"}`,
+      plan: currentProfile.plan,
+      next_payment_date: currentProfile.next_payment_date,
+      invoice_type: "subscription"
+    });
+  }
+
+  // =========================
+  // FACTURES APPAREILS SECONDAIRES
+  // =========================
+  for (const device of currentDevices) {
+    const deviceStatus = cleanValue(device.status);
+
+    // Facture d'activation appareil secondaire
+    // Une seule fois seulement
+    if (
+      deviceStatus === "en_attente" &&
+      !device.next_payment_date
+    ) {
+      const alreadyHasActivationInvoice = await activationInvoiceExists("device", device.id);
+
+      if (!alreadyHasActivationInvoice) {
+        const activationDueDate = device.created_at
+          ? device.created_at.split("T")[0]
+          : new Date().toISOString().split("T")[0];
+
+        await createInvoice({
+          target_type: "device",
+          device_id: device.id,
+          target_label: `${device.phone_model || "Appareil secondaire"} / ${device.imei || "-"}`,
+          plan: device.plan,
+          next_payment_date: activationDueDate,
+          invoice_type: "activation"
+        });
+      }
+    }
+
+    // Facture normale appareil secondaire
+    // Seulement après activation admin
+    if (
+      deviceStatus === "actif" &&
+      device.next_payment_date
+    ) {
+      await createInvoice({
+        target_type: "device",
+        device_id: device.id,
+        target_label: `${device.phone_model || "Appareil secondaire"} / ${device.imei || "-"}`,
+        plan: device.plan,
+        next_payment_date: device.next_payment_date,
+        invoice_type: "subscription"
+      });
+    }
+  }
+}
+
+async function loadInvoices() {
+  const { data, error } = await supabaseClient
+    .from("invoices")
+    .select("*")
+    .eq("user_id", currentUserId)
+    .order("due_date", { ascending:true });
+
+  if (error) {
+    alert("Erreur factures : " + error.message);
+    return;
+  }
+
+  allInvoices = data || [];
+}
+
+function displayInvoices() {
+  const unpaidContainer = document.getElementById("unpaid-invoices-list");
+  const paidContainer = document.getElementById("paid-invoices-list");
+
+  unpaidContainer.innerHTML = "";
+  paidContainer.innerHTML = "";
+
+  const unpaid = allInvoices.filter(item => item.status !== "paid");
+  const paid = allInvoices.filter(item => item.status === "paid");
+
+  let totalUnpaid = 0;
+
+  if (unpaid.length === 0) {
+  unpaidContainer.innerHTML = `
+    <div class="invoice-empty">
+      Aucune facture non réglée pour le moment.<br>
+      Votre abonnement est à jour.
+    </div>
+  `;
+}
+
+unpaid.forEach(invoice => {
+  const penalty = calculatePenalty(invoice.due_date);
+  const total = Number(invoice.amount || 0) + penalty;
+
+  totalUnpaid += total;
+
+  const card = document.createElement("div");
+  card.className = "invoice-card";
+
+  card.innerHTML = `
+    <div class="invoice-card-header">
+      <div>
+        <div class="invoice-card-title">${invoice.target_label || "Appareil concerné"}</div>
+        <div class="invoice-card-subtitle">
+          Formule ${invoice.plan || "-"} • Échéance du ${formatDate(invoice.due_date)}
+        </div>
+      </div>
+
+      <span class="status ${getInvoiceStatusClass(invoice)}">
+        ${getInvoiceStatusLabel(invoice)}
+      </span>
+    </div>
+
+    <div class="invoice-details">
+      <div class="invoice-line">
+        <span>Montant abonnement</span>
+        <strong>${formatMoney(invoice.amount)}</strong>
+      </div>
+
+      <div class="invoice-line">
+        <span>Pénalité</span>
+        <strong>${formatMoney(penalty)}</strong>
+      </div>
+
+      <div class="invoice-total">
+        <span>Total à payer</span>
+        <strong>${formatMoney(total)}</strong>
+      </div>
+    </div>
+
+    <button class="btn btn-green invoice-pay-btn" onclick="payInvoice('${invoice.id}')">
+      Payer maintenant
+    </button>
+  `;
+
+  unpaidContainer.appendChild(card);
+});
+
+  if (paid.length === 0) {
+    paidContainer.innerHTML = `
+      <tr>
+        <td colspan="7">Aucun paiement effectué.</td>
+      </tr>
+    `;
+  }
+
+  paid
+    .sort((a, b) => new Date(b.paid_at) - new Date(a.paid_at))
+    .forEach(invoice => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${formatDateTime(invoice.paid_at)}</td>
+        <td>${invoice.target_label || "-"}</td>
+        <td>${invoice.plan || "-"}</td>
+        <td>${formatDate(invoice.due_date)}</td>
+        <td>${formatMoney(invoice.amount)}</td>
+        <td>${formatMoney(invoice.penalty_amount)}</td>
+        <td><strong>${formatMoney(invoice.total_amount || invoice.amount)}</strong></td>
+      `;
+
+      paidContainer.appendChild(row);
+    });
+
+  document.getElementById("total-unpaid").innerText = formatMoney(totalUnpaid);
+  document.getElementById("unpaid-count").innerText = unpaid.length;
+}
+
+async function payInvoice(invoiceId) {
+  const confirmation = confirm("Confirmer le paiement de cette facture ?");
+
+  if (!confirmation) return;
+
+  const { error } = await supabaseClient.rpc("mark_invoice_paid", {
+    p_invoice_id: invoiceId
+  });
+
+  if (error) {
+    alert("Erreur paiement : " + error.message);
+    return;
+  }
+
+  alert("Paiement enregistré avec succès.");
+
+await refreshPaymentStatuses();
+await loadProfile();
+await loadDevices();
+await ensureInvoices();
+await loadInvoices();
+
+displayInvoices();
+displayAdvancePayments();
+}
+
+function getTargetsForAdvance() {
+  const targets = [];
+
+  if (currentProfile && currentProfile.status !== "resilie") {
+    targets.push({
+      target_type: "profile",
+      device_id: null,
+      label: `${currentProfile.phone_model || "Appareil principal"} / ${currentProfile.imei || "-"}`,
+      plan: currentProfile.plan,
+      next_payment_date: currentProfile.next_payment_date
+    });
+  }
+
+  currentDevices.forEach(device => {
+    if (device.status === "refuse" || device.status === "resilie") return;
+
+    targets.push({
+      target_type: "device",
+      device_id: device.id,
+      label: `${device.phone_model || "Appareil secondaire"} / ${device.imei || "-"}`,
+      plan: device.plan,
+      next_payment_date: device.next_payment_date
+    });
+  });
+
+  return targets;
+}
+
+function hasLateUnpaidInvoice(target) {
+  return allInvoices.some(invoice => {
+    const sameTarget = target.device_id
+      ? invoice.device_id === target.device_id
+      : invoice.device_id === null;
+
+    if (!sameTarget || invoice.status === "paid") return false;
+
+    const today = new Date();
+    const due = new Date(invoice.due_date);
+
+    today.setHours(0,0,0,0);
+    due.setHours(0,0,0,0);
+
+    return due < today;
+  });
+}
+
+function getLatestDueDateForTarget(target) {
+  const targetInvoices = allInvoices.filter(invoice => {
+    if (target.device_id) return invoice.device_id === target.device_id;
+    return invoice.device_id === null;
+  });
+
+  if (targetInvoices.length === 0) {
+    return target.next_payment_date;
+  }
+
+  targetInvoices.sort((a, b) => new Date(b.due_date) - new Date(a.due_date));
+
+  return targetInvoices[0].due_date;
+}
+
+function displayAdvancePayments() {
+  const container = document.getElementById("advance-payments-list");
+  container.innerHTML = "";
+
+  const targets = getTargetsForAdvance();
+
+  if (targets.length === 0) {
+    container.innerHTML = `<p class="empty">Aucun abonnement actif trouvé.</p>`;
+    return;
+  }
+
+  targets.forEach(target => {
+    const card = document.createElement("div");
+    card.className = "advance-card";
+
+    const blocked = hasLateUnpaidInvoice(target);
+
+    card.innerHTML = `
+      <h3>${target.label}</h3>
+      <p>
+        Formule : <strong>${target.plan || "-"}</strong><br>
+        Prochaine échéance actuelle : <strong>${formatDate(target.next_payment_date)}</strong>
+      </p>
+      <button class="btn ${blocked ? "btn-light" : "btn-purple"}" ${blocked ? "disabled" : ""}>
+        ${blocked ? "Régler le retard d’abord" : "Payer le mois suivant"}
+      </button>
+    `;
+
+    if (!blocked) {
+      card.querySelector("button").onclick = () => createAdvanceInvoice(target);
+    }
+
+    container.appendChild(card);
+  });
+}
+
+async function createAdvanceInvoice(target) {
+  const latestDueDate = getLatestDueDateForTarget(target);
+
+  if (!latestDueDate) {
+    alert("Aucune échéance de base trouvée pour cet abonnement.");
+    return;
+  }
+
+  const advanceDueDate = getNextFixedDueDate(latestDueDate);
+  const amount = getPlanPrice(target.plan);
+
+  const exists = await invoiceExists(target.target_type, target.device_id, advanceDueDate);
+
+  if (exists) {
+    alert("Cette facture existe déjà dans vos factures.");
+    return;
+  }
+
+  const confirmation = confirm(
+    "Créer une facture d’avance pour l’échéance du " +
+    formatDate(advanceDueDate) +
+    " ?"
+  );
+
+  if (!confirmation) return;
+
+  const { error } = await supabaseClient
+    .from("invoices")
+    .insert({
+      user_id: currentUserId,
+      device_id: target.device_id,
+      target_type: target.target_type,
+      target_label: target.label,
+      plan: target.plan,
+      amount: amount,
+      penalty_amount: 0,
+      total_amount: amount,
+      due_date: advanceDueDate,
+      status: "unpaid",
+      invoice_type: "advance"
+    });
+
+  if (error) {
+    alert("Erreur création facture avance : " + error.message);
+    return;
+  }
+
+  alert("Facture d’avance créée. Elle apparaît maintenant dans vos factures non réglées.");
+
+  await loadProfile();
+  await loadDevices();
+  await ensureInvoices();
+  await loadInvoices();
+
+  displayInvoices();
+  displayAdvancePayments();
+}
+async function refreshPaymentStatuses() {
+  const { error } = await supabaseClient.rpc("refresh_payment_statuses");
+
+  if (error) {
+    alert("Erreur actualisation statuts paiement : " + error.message);
+  }
+}
+checkUser();
+</script>
+
+</body>
+</html>

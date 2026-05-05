@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin | I-PROTECT</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#f9fafb;
+  color:#111827;
+}
+
+.header{
+  background:white;
+  padding:15px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-box{
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  background:#f3e8ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.logo-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.admin-badge{
+  background:#ede9fe;
+  color:#6d28d9;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:25px;
+}
+
+.page-title{
+  margin-bottom:25px;
+}
+
+.page-title h1{
+  font-size:30px;
+  margin-bottom:6px;
+}
+
+.page-title p{
+  color:#6b7280;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(190px,1fr));
+  gap:18px;
+  margin-bottom:28px;
+}
+
+.stat-card{
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+.stat-card h3{
+  font-size:14px;
+  color:#6b7280;
+  margin-bottom:8px;
+}
+
+.stat-card p{
+  font-size:24px;
+  font-weight:800;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:22px;
+}
+
+.panel{
+  background:white;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  margin-bottom:22px;
+}
+
+.panel h2{
+  font-size:20px;
+  margin-bottom:16px;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+
+th, td{
+  padding:14px;
+  text-align:left;
+  border-bottom:1px solid #e5e7eb;
+  white-space:nowrap;
+}
+
+th{
+  color:#6b7280;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+
+.status{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.active{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.pending{
+  background:#fef3c7;
+  color:#92400e;
+}
+
+.suspended{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.btn{
+  padding:9px 12px;
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btn-purple{
+  background:#7c3aed;
+  color:white;
+}
+.btn-green{
+  background:#16a34a;
+  color:white;
+}
+
+.btn-red{
+  background:#dc2626;
+  color:white;
+}
+.btn-light{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+.list-item{
+  padding:14px 0;
+  border-bottom:1px solid #eee;
+}
+
+.list-item:last-child{
+  border-bottom:none;
+}
+
+.list-item strong{
+  display:block;
+}
+
+.list-item span{
+  color:#6b7280;
+  font-size:13px;
+}
+
+.quick-actions{
+  display:grid;
+  gap:12px;
+}
+
+.quick-actions button{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  background:#7c3aed;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.quick-actions button.secondary{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+.quick-link{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  background:#ede9fe;
+  color:#6d28d9;
+  font-weight:700;
+  text-align:center;
+  display:block;
+  text-decoration:none;
+}
+
+#backToTop {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 54px;
+  height: 54px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #4c1d95);
+  color: white;
+  font-size: 24px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 18px 40px rgba(124, 58, 237, 0.35);
+  z-index: 9999;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(18px) scale(0.9);
+  transition: all 0.3s ease;
+}
+
+#backToTop.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+#backToTop:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 22px 45px rgba(124, 58, 237, 0.45);
+}
+
+#backToTop:active {
+  transform: translateY(-2px) scale(0.96);
+}
+
+@media(max-width:700px){
+  #backToTop {
+    width: 48px;
+    height: 48px;
+    bottom: 20px;
+    right: 20px;
+    font-size: 22px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<button id="backToTop" title="Remonter en haut">
+  ↑
+</button>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-box">
+      <img src="logo.png" alt="Logo I-PROTECT">
+    </div>
+    <div>
+      <strong>I-PROTECT</strong><br>
+      <small>Administration</small>
+    </div>
+  </div>
+
+  <div class="admin-badge">Admin connecté</div>
+</header>
+
+<main class="container">
+
+  <div class="page-title">
+    <h1>Dashboard administrateur</h1>
+    <p>Vue globale de l’activité I-PROTECT</p>
+  </div>
+
+  <section class="stats">
+    <div class="stat-card">
+      <h3>Total clients</h3>
+      <p id="total-clients">...</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Abonnements actifs</h3>
+      <p id="active-clients">...</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>En attente</h3>
+      <p id="pending-clients">...</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Suspendus</h3>
+      <p id="suspended-clients">...</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Revenus mensuels</h3>
+      <p id="monthly-revenue">...</p>
+    </div>
+  </section>
+
+  
+
+  <div class="grid">
+
+    <div>
+
+      <section class="panel">
+        <h2>Clients récents</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Téléphone</th>
+                <th>Formule</th>
+                <th>Statut</th>
+                <th>IMEI</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="clients-list">
+              
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="panel" id="section-tous-clients">
+  <h2>Tous les clients</h2>
+
+  <div class="filters">
+    <input type="text" id="search-client" placeholder="Rechercher par nom...">
+
+    <select id="filter-client-status">
+      <option value="all">Tous les statuts</option>
+      <option value="actif">Actif</option>
+      <option value="en_attente">En attente</option>
+      <option value="suspendu">Suspendu</option>
+      <option value="resilie">Résilié</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Téléphone</th>
+          <th>Formule</th>
+          <th>Statut</th>
+          <th>IMEI</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="all-clients-list"></tbody>
+    </table>
+  </div>
+</section>
+<section class="panel" id="section-change-requests">
+  <h2>Demandes de modification client</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Champ</th>
+          <th>Ancienne valeur</th>
+          <th>Nouvelle valeur</th>
+          <th>Statut</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="change-requests-list"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel" id="section-device-change-requests">
+  <h2>Demandes de modification appareils</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Appareil</th>
+          <th>Champ</th>
+          <th>Ancienne valeur</th>
+          <th>Nouvelle valeur</th>
+          <th>Statut</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="device-change-requests-list"></tbody>
+    </table>
+  </div>
+</section>
+
+      <section class="panel" id="section-interventions">
+  <h2>Demandes d’intervention</h2>
+
+  <div class="filters">
+    <input type="text" id="search-intervention-client" placeholder="Rechercher par client...">
+
+    <select id="filter-intervention-status">
+      <option value="all">Tous les statuts</option>
+      <option value="en_attente">En attente</option>
+      <option value="en_cours">En cours</option>
+      <option value="termine">Terminé</option>
+      <option value="refuse">Refusé</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+  <th>Client</th>
+  <th>Appareil</th>
+  <th>IMEI</th>
+  <th>Date</th>
+  <th>Problème</th>
+  <th>Statut</th>
+  <th>Action</th>
+</tr>
+      </thead>
+
+      <tbody id="interventions-list"></tbody>
+    </table>
+  </div>
+</section>
+
+      <section class="panel" id="section-performances">
+  <h2>Performances & historique</h2>
+
+  <div class="filters">
+    <input type="date" id="perf-start-date">
+    <input type="date" id="perf-end-date">
+
+    <button class="btn btn-purple" onclick="loadPerformances()">
+      Filtrer
+    </button>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h3>Interventions période</h3>
+      <p id="perf-total-interventions">...</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Interventions terminées</h3>
+      <p id="perf-completed-interventions">...</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Coût total réparations</h3>
+      <p id="perf-repair-cost">...</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Pris en charge I-PROTECT</h3>
+      <p id="perf-coverage">...</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Reliquats clients</h3>
+      <p id="perf-remainders">...</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Revenus encaissés période</h3>
+      <p id="perf-mrr">...</p>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Client</th>
+          <th>Problème</th>
+          <th>Coût</th>
+          <th>Pris en charge</th>
+          <th>Reliquat</th>
+          <th>Statut</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="performance-interventions-list"></tbody>
+    </table>
+  </div>
+</section>  
+
+    </div>
+
+    <aside>
+
+      <section class="panel">
+  <h2>Paiements récents</h2>
+  <div id="recent-payments-list"></div>
+</section>
+
+      <section class="panel">
+        <h2>Actions rapides</h2>
+
+       <div class="quick-actions">
+
+  <a href="#section-change-requests" class="secondary quick-link">
+    Demandes modification client
+  </a>
+
+  <a href="#section-device-change-requests" class="secondary quick-link">
+    Demandes modification appareils
+  </a>
+
+  <a href="#section-tous-clients" class="secondary quick-link">
+    Voir tous les clients
+  </a>
+
+  <button class="secondary">Voir les paiements</button>
+
+  <a href="#section-interventions" class="secondary quick-link">
+    Voir les interventions
+  </a>
+
+  <a href="#section-performances" class="secondary quick-link">
+    Voir performances
+  </a>
+
+</div>
+      </section>
+
+      
+
+    </aside>
+
+  </div>
+
+  
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://tzwltqnkolkgemdhiimp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6d2x0cW5rb2xrZ2VtZGhpaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMzk3MDIsImV4cCI6MjA5MjkxNTcwMn0.9_xIrz6030zEoGFhD6iPN3cq6Z8_aZsDuLVipeY5D0o";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* =========================
+   OUTILS GÉNÉRAUX
+========================= */
+
+function cleanValue(value) {
+  return (value || "").toString().trim().toLowerCase();
+}
+
+function formatMoney(amount) {
+  return Number(amount || 0).toLocaleString("fr-FR") + " FCFA";
+}
+
+function getStatusClass(status) {
+  if (status === "termine") return "active";
+  if (status === "en_cours") return "pending";
+  if (status === "refuse") return "suspended";
+  return "pending";
+}
+
+function getClientStatusClass(status) {
+  if (status === "actif") return "active";
+  if (status === "suspendu") return "suspended";
+  return "pending";
+}
+
+function getRequestStatusClass(status) {
+  if (status === "approuve") return "active";
+  if (status === "refuse") return "suspended";
+  return "pending";
+}
+
+function getPlanPrice(plan) {
+  const cleanPlan = cleanValue(plan);
+
+  if (cleanPlan === "starter") return 2900;
+  if (cleanPlan === "plus") return 5900;
+  if (cleanPlan === "elite") return 9900;
+
+  return 0;
+}
+
+function getBaseCeiling(plan) {
+  const cleanPlan = cleanValue(plan);
+
+  if (cleanPlan === "starter") return 40000;
+  if (cleanPlan === "plus") return 80000;
+  if (cleanPlan === "elite") return 130000;
+
+  return 0;
+}
+
+function getCeilingByPlan(plan) {
+  return getBaseCeiling(plan);
+}
+
+function getFieldLabel(fieldName) {
+  if (fieldName === "email") return "Email";
+  if (fieldName === "plan") return "Formule";
+  if (fieldName === "phone_model") return "Modèle téléphone";
+  if (fieldName === "imei") return "IMEI";
+  return fieldName;
+}
+
+function getDeviceFieldLabel(fieldName) {
+  if (fieldName === "phone_model") return "Modèle téléphone";
+  if (fieldName === "imei") return "IMEI";
+  if (fieldName === "plan") return "Formule";
+  return fieldName;
+}
+
+/* =========================
+   PLAFONDS ANNUELS
+========================= */
+
+function getBonusCeiling(plan, years) {
+  const cleanPlan = cleanValue(plan);
+  const safeYears = Math.min(Math.max(years, 0), 3);
+
+  if (cleanPlan === "starter") {
+    return 40000 + safeYears * 10000;
+  }
+
+  if (cleanPlan === "plus") {
+    return 80000 + safeYears * 20000;
+  }
+
+  if (cleanPlan === "elite") {
+    if (safeYears === 0) return 130000;
+    if (safeYears === 1) return 160000;
+    if (safeYears === 2) return 190000;
+    return 200000;
+  }
+
+  return 0;
+}
+
+function addYears(dateValue, years) {
+  const date = new Date(dateValue);
+  date.setFullYear(date.getFullYear() + years);
+  return date;
+}
+
+function getFullYearsSince(dateValue) {
+  if (!dateValue) return 0;
+
+  const start = new Date(dateValue);
+  const today = new Date();
+
+  let years = today.getFullYear() - start.getFullYear();
+
+  const anniversaryPassed =
+    today.getMonth() > start.getMonth() ||
+    (today.getMonth() === start.getMonth() && today.getDate() >= start.getDate());
+
+  if (!anniversaryPassed) {
+    years--;
+  }
+
+  return Math.max(years, 0);
+}
+
+function hadInterventionDuringYear(lastInterventionDate, startDate, endDate) {
+  if (!lastInterventionDate) return false;
+
+  const interventionDate = new Date(lastInterventionDate);
+  return interventionDate >= startDate && interventionDate < endDate;
+}
+
+async function updateAnnualCeilings() {
+  await updateProfilesAnnualCeilings();
+  await updateDevicesAnnualCeilings();
+}
+
+async function updateProfilesAnnualCeilings() {
+  const { data: clients, error } = await supabaseClient
+    .from("profiles")
+    .select("id, email, role, status, plan, created_at, last_intervention_date, initial_ceiling, remaining_ceiling, current_ceiling, last_ceiling_update_year");
+
+  if (error) {
+    alert("Erreur plafonds annuels clients : " + error.message);
+    return;
+  }
+
+  for (const client of clients) {
+    if (client.role === "admin") continue;
+    if (cleanValue(client.status) !== "actif") continue;
+
+    const baseCeiling = getBaseCeiling(client.plan);
+    if (baseCeiling === 0) continue;
+
+    const yearsSinceSignup = Math.min(getFullYearsSince(client.created_at), 3);
+    if (yearsSinceSignup <= 0) continue;
+
+    const lastUpdatedYear = Number(client.last_ceiling_update_year || 0);
+    if (lastUpdatedYear >= yearsSinceSignup) continue;
+
+    const periodStart = addYears(client.created_at, yearsSinceSignup - 1);
+    const periodEnd = addYears(client.created_at, yearsSinceSignup);
+
+    const hadIntervention = hadInterventionDuringYear(
+      client.last_intervention_date,
+      periodStart,
+      periodEnd
+    );
+
+    const targetCeiling = hadIntervention
+      ? baseCeiling
+      : getBonusCeiling(client.plan, yearsSinceSignup);
+
+    const { error: updateError } = await supabaseClient
+      .from("profiles")
+      .update({
+        initial_ceiling: targetCeiling,
+        remaining_ceiling: targetCeiling,
+        current_ceiling: targetCeiling,
+        last_ceiling_update_year: yearsSinceSignup
+      })
+      .eq("id", client.id);
+
+    if (updateError) {
+      alert("Erreur mise à jour plafond client : " + updateError.message);
+      return;
+    }
+  }
+}
+
+async function updateDevicesAnnualCeilings() {
+  const { data: devices, error } = await supabaseClient
+    .from("devices")
+    .select("id, status, plan, created_at, last_intervention_date, initial_ceiling, remaining_ceiling, current_ceiling, last_ceiling_update_year");
+
+  if (error) {
+    alert("Erreur plafonds annuels appareils : " + error.message);
+    return;
+  }
+
+  for (const device of devices) {
+    if (cleanValue(device.status) !== "actif") continue;
+
+    const baseCeiling = getBaseCeiling(device.plan);
+    if (baseCeiling === 0) continue;
+
+    const yearsSinceSignup = Math.min(getFullYearsSince(device.created_at), 3);
+    if (yearsSinceSignup <= 0) continue;
+
+    const lastUpdatedYear = Number(device.last_ceiling_update_year || 0);
+    if (lastUpdatedYear >= yearsSinceSignup) continue;
+
+    const periodStart = addYears(device.created_at, yearsSinceSignup - 1);
+    const periodEnd = addYears(device.created_at, yearsSinceSignup);
+
+    const hadIntervention = hadInterventionDuringYear(
+      device.last_intervention_date,
+      periodStart,
+      periodEnd
+    );
+
+    const targetCeiling = hadIntervention
+      ? baseCeiling
+      : getBonusCeiling(device.plan, yearsSinceSignup);
+
+    const { error: updateError } = await supabaseClient
+      .from("devices")
+      .update({
+        initial_ceiling: targetCeiling,
+        remaining_ceiling: targetCeiling,
+        current_ceiling: targetCeiling,
+        last_ceiling_update_year: yearsSinceSignup
+      })
+      .eq("id", device.id);
+
+    if (updateError) {
+      alert("Erreur mise à jour plafond appareil : " + updateError.message);
+      return;
+    }
+  }
+}
+
+/* =========================
+   PROTECTION ADMIN
+========================= */
+
+async function refreshPaymentStatuses() {
+  const { error } = await supabaseClient.rpc("refresh_payment_statuses");
+
+  if (error) {
+    alert("Erreur actualisation statuts paiement : " + error.message);
+  }
+}
+
+async function checkAdmin() {
+  const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+  if (userError || !user) {
+    alert("Session non trouvée. Reconnecte-toi.");
+    window.location.href = "connexion.html";
+    return;
+  }
+
+  const { data: profile, error: profileError } = await supabaseClient
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError || !profile) {
+    alert("Erreur profil admin : " + profileError.message);
+    return;
+  }
+
+  if (profile.role !== "admin") {
+    alert("Accès réservé à l’administrateur.");
+    window.location.href = "dashboard-client.html";
+    return;
+  }
+
+ await refreshPaymentStatuses();
+await updateAnnualCeilings();
+
+loadInterventions();
+loadStats();
+loadClients();
+loadAllClients();
+loadChangeRequests();
+loadDeviceChangeRequests();
+loadRecentPayments();
+loadPerformances();
+}
+
+/* =========================
+   INTERVENTIONS
+========================= */
+
+async function loadInterventions() {
+  const { data: interventions, error } = await supabaseClient
+    .from("interventions")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    alert("Erreur interventions : " + error.message);
+    console.error(error);
+    return;
+  }
+
+  const container = document.getElementById("interventions-list");
+
+  if (!container) {
+    alert("Erreur : interventions-list introuvable dans le HTML");
+    return;
+  }
+
+  container.innerHTML = "";
+
+  interventions.sort((a, b) => {
+    const order = {
+      en_attente: 1,
+      en_cours: 2,
+      termine: 3,
+      refuse: 4
+    };
+
+    return (order[a.status] || 99) - (order[b.status] || 99);
+  });
+
+  for (const item of interventions) {
+    const { data: profile } = await supabaseClient
+      .from("profiles")
+      .select("full_name")
+      .eq("id", item.user_id)
+      .single();
+
+    let deviceModel = "-";
+    let deviceImei = "-";
+
+    if (!item.device_id || item.device_id === "main_device") {
+      const { data: mainDevice } = await supabaseClient
+        .from("profiles")
+        .select("phone_model, imei")
+        .eq("id", item.user_id)
+        .single();
+
+      deviceModel = mainDevice?.phone_model || "-";
+      deviceImei = mainDevice?.imei || "-";
+    } else {
+      const { data: device } = await supabaseClient
+        .from("devices")
+        .select("phone_model, imei")
+        .eq("id", item.device_id)
+        .single();
+
+      deviceModel = device?.phone_model || "-";
+      deviceImei = device?.imei || "-";
+    }
+
+    const row = document.createElement("tr");
+
+    row.setAttribute("data-client", (profile?.full_name || "Client inconnu").toLowerCase());
+    row.setAttribute("data-status", item.status || "en_attente");
+
+    row.innerHTML = `
+      <td>${profile?.full_name || "Client inconnu"}</td>
+      <td>${deviceModel}</td>
+      <td>${deviceImei}</td>
+      <td>${item.problem_date ? new Date(item.problem_date).toLocaleDateString("fr-FR") : "-"}</td>
+      <td>${item.problem_type || "-"}</td>
+      <td><span class="status ${getStatusClass(item.status)}">${item.status || "en_attente"}</span></td>
+      <td>
+        <a class="btn btn-purple" href="intervention-detail.html?id=${item.id}">
+          Voir
+        </a>
+      </td>
+    `;
+
+    container.appendChild(row);
+  }
+}
+
+async function updateStatus(id, newStatus) {
+  const { error } = await supabaseClient
+    .from("interventions")
+    .update({ status: newStatus })
+    .eq("id", id);
+
+  if (error) {
+    alert("Erreur : " + error.message);
+    return;
+  }
+
+  loadInterventions();
+}
+
+function filterInterventions() {
+  const search = document.getElementById("search-intervention-client").value.toLowerCase();
+  const status = document.getElementById("filter-intervention-status").value;
+
+  const rows = document.querySelectorAll("#interventions-list tr");
+
+  rows.forEach(row => {
+    const clientName = row.getAttribute("data-client") || "";
+    const rowStatus = row.getAttribute("data-status") || "";
+
+    const matchName = clientName.includes(search);
+    const matchStatus = status === "all" || rowStatus === status;
+
+    row.style.display = matchName && matchStatus ? "" : "none";
+  });
+}
+
+/* =========================
+   STATS
+========================= */
+
+async function loadStats() {
+  const { data: profiles, error } = await supabaseClient
+    .from("profiles")
+    .select("status, plan, role");
+
+  if (error) {
+    alert("Erreur stats : " + error.message);
+    return;
+  }
+
+  const { data: devices, error: devicesError } = await supabaseClient
+    .from("devices")
+    .select("status, plan");
+
+  if (devicesError) {
+    alert("Erreur stats appareils : " + devicesError.message);
+    return;
+  }
+
+  const clients = profiles.filter(p => p.role !== "admin");
+
+  const total = clients.length;
+  const actifs = clients.filter(p => cleanValue(p.status) === "actif").length;
+  const attente = clients.filter(p => cleanValue(p.status) === "en_attente").length;
+  const suspendus = clients.filter(p => cleanValue(p.status) === "suspendu").length;
+
+  const startOfMonth = new Date();
+startOfMonth.setDate(1);
+startOfMonth.setHours(0, 0, 0, 0);
+
+const startOfNextMonth = new Date(startOfMonth);
+startOfNextMonth.setMonth(startOfNextMonth.getMonth() + 1);
+
+const { data: paidInvoices, error: invoicesError } = await supabaseClient
+  .from("invoices")
+  .select("total_amount, paid_at")
+  .eq("status", "paid")
+  .gte("paid_at", startOfMonth.toISOString())
+  .lt("paid_at", startOfNextMonth.toISOString());
+
+if (invoicesError) {
+  alert("Erreur revenus paiements : " + invoicesError.message);
+  return;
+}
+
+let revenus = 0;
+
+paidInvoices.forEach(invoice => {
+  revenus += Number(invoice.total_amount || 0);
+});
+
+  document.getElementById("total-clients").innerText = total;
+  document.getElementById("active-clients").innerText = actifs;
+  document.getElementById("pending-clients").innerText = attente;
+  document.getElementById("suspended-clients").innerText = suspendus;
+  document.getElementById("monthly-revenue").innerText =
+    revenus.toLocaleString("fr-FR") + " FCFA";
+}
+
+/* =========================
+   CLIENTS
+========================= */
+
+async function loadClients() {
+  const { data: clients, error } = await supabaseClient
+    .from("profiles")
+    .select("id, full_name, phone, email, plan, status, imei, role, created_at")
+    .neq("role", "admin")
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  if (error) {
+    alert("Erreur clients : " + error.message);
+    return;
+  }
+
+  const container = document.getElementById("clients-list");
+  container.innerHTML = "";
+
+  clients.forEach(client => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${client.full_name || "-"}</td>
+      <td>${client.phone || "-"}</td>
+      <td>${client.plan || "-"}</td>
+      <td><span class="status ${getClientStatusClass(client.status)}">${client.status || "en_attente"}</span></td>
+      <td>${client.imei || "-"}</td>
+      <td>
+        <a class="btn btn-light" href="client-detail.html?id=${client.id}">
+          Voir
+        </a>
+      </td>
+    `;
+
+    container.appendChild(row);
+  });
+}
+
+let allClientsData = [];
+
+async function loadAllClients() {
+  const { data: clients, error } = await supabaseClient
+    .from("profiles")
+    .select("id, full_name, phone, plan, status, imei, role, created_at")
+    .neq("role", "admin")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    alert("Erreur clients : " + error.message);
+    return;
+  }
+
+  allClientsData = clients;
+  displayAllClients();
+}
+
+function displayAllClients() {
+  const search = document.getElementById("search-client").value.toLowerCase();
+  const status = document.getElementById("filter-client-status").value;
+
+  let filtered = allClientsData.filter(client =>
+    (client.full_name || "").toLowerCase().includes(search)
+  );
+
+  if (status !== "all") {
+    filtered = filtered.filter(client => client.status === status);
+  }
+
+  const container = document.getElementById("all-clients-list");
+  container.innerHTML = "";
+
+  filtered.forEach(client => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${client.full_name || "-"}</td>
+      <td>${client.phone || "-"}</td>
+      <td>${client.plan || "-"}</td>
+      <td><span class="status ${getClientStatusClass(client.status)}">${client.status || "en_attente"}</span></td>
+      <td>${client.imei || "-"}</td>
+      <td>
+        <a class="btn btn-light" href="client-detail.html?id=${client.id}">
+          Voir
+        </a>
+      </td>
+    `;
+
+    container.appendChild(row);
+  });
+}
+
+/* =========================
+   DEMANDES MODIFICATION PROFIL
+========================= */
+
+async function loadChangeRequests() {
+  const { data: requests, error } = await supabaseClient
+    .from("profile_change_requests")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    alert("Erreur demandes modification : " + error.message);
+    return;
+  }
+
+  const container = document.getElementById("change-requests-list");
+  container.innerHTML = "";
+
+  if (requests.length === 0) {
+    container.innerHTML = `
+      <tr>
+        <td colspan="6">Aucune demande de modification.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  for (const request of requests) {
+    const { data: profile } = await supabaseClient
+      .from("profiles")
+      .select("full_name")
+      .eq("id", request.user_id)
+      .single();
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${profile?.full_name || "Client inconnu"}</td>
+      <td>${getFieldLabel(request.field_name)}</td>
+      <td>${request.old_value || "-"}</td>
+      <td>${request.new_value || "-"}</td>
+      <td>
+        <span class="status ${getRequestStatusClass(request.status)}">
+          ${request.status || "en_attente"}
+        </span>
+      </td>
+      <td>
+        ${
+          request.status === "en_attente"
+          ? `
+            <button class="btn btn-green" onclick="approveChangeRequest('${request.id}', '${request.user_id}', '${request.field_name}', '${request.new_value}')">
+              Approuver
+            </button>
+
+            <button class="btn btn-red" onclick="rejectChangeRequest('${request.id}')">
+              Refuser
+            </button>
+          `
+          : "-"
+        }
+      </td>
+    `;
+
+    container.appendChild(row);
+  }
+}
+
+async function approveChangeRequest(requestId, userId, fieldName, newValue) {
+  let updateData = {};
+  updateData[fieldName] = newValue;
+
+  if (fieldName === "plan") {
+    const newCeiling = getCeilingByPlan(newValue);
+
+    updateData.initial_ceiling = newCeiling;
+    updateData.remaining_ceiling = newCeiling;
+    updateData.current_ceiling = newCeiling;
+    updateData.last_ceiling_update_year = 0;
+  }
+
+  const { error: profileError } = await supabaseClient
+    .from("profiles")
+    .update(updateData)
+    .eq("id", userId);
+
+  if (profileError) {
+    alert("Erreur mise à jour profil : " + profileError.message);
+    return;
+  }
+
+  const { error: requestError } = await supabaseClient
+    .from("profile_change_requests")
+    .update({
+      status: "approuve",
+      reviewed_at: new Date().toISOString()
+    })
+    .eq("id", requestId);
+
+  if (requestError) {
+    alert("Erreur mise à jour demande : " + requestError.message);
+    return;
+  }
+
+  alert("Demande approuvée.");
+  loadChangeRequests();
+  loadClients();
+  loadAllClients();
+  loadStats();
+}
+
+async function rejectChangeRequest(requestId) {
+  const { error } = await supabaseClient
+    .from("profile_change_requests")
+    .update({
+      status: "refuse",
+      reviewed_at: new Date().toISOString()
+    })
+    .eq("id", requestId);
+
+  if (error) {
+    alert("Erreur refus demande : " + error.message);
+    return;
+  }
+
+  alert("Demande refusée.");
+  loadChangeRequests();
+}
+
+/* =========================
+   DEMANDES MODIFICATION APPAREILS
+========================= */
+
+async function loadDeviceChangeRequests() {
+  const { data: requests, error } = await supabaseClient
+    .from("device_change_requests")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    alert("Erreur demandes appareils : " + error.message);
+    return;
+  }
+
+  const container = document.getElementById("device-change-requests-list");
+  container.innerHTML = "";
+
+  if (requests.length === 0) {
+    container.innerHTML = `
+      <tr>
+        <td colspan="7">Aucune demande de modification appareil.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  for (const request of requests) {
+    const { data: profile } = await supabaseClient
+      .from("profiles")
+      .select("full_name")
+      .eq("id", request.user_id)
+      .single();
+
+    const { data: device } = await supabaseClient
+      .from("devices")
+      .select("phone_model, imei, plan")
+      .eq("id", request.device_id)
+      .single();
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${profile?.full_name || "Client inconnu"}</td>
+      <td>${device?.phone_model || "-"} / ${device?.imei || "-"}</td>
+      <td>${getDeviceFieldLabel(request.field_name)}</td>
+      <td>${request.old_value || "-"}</td>
+      <td>${request.new_value || "-"}</td>
+      <td>
+        <span class="status ${getRequestStatusClass(request.status)}">
+          ${request.status || "en_attente"}
+        </span>
+      </td>
+      <td>
+        ${
+          request.status === "en_attente"
+          ? `
+            <button class="btn btn-green" onclick="approveDeviceChangeRequest('${request.id}', '${request.device_id}', '${request.field_name}', '${request.new_value}')">
+              Approuver
+            </button>
+
+            <button class="btn btn-red" onclick="rejectDeviceChangeRequest('${request.id}')">
+              Refuser
+            </button>
+          `
+          : "-"
+        }
+      </td>
+    `;
+
+    container.appendChild(row);
+  }
+}
+
+async function approveDeviceChangeRequest(requestId, deviceId, fieldName, newValue) {
+  let updateData = {};
+  updateData[fieldName] = newValue;
+
+  if (fieldName === "plan") {
+    const newCeiling = getCeilingByPlan(newValue);
+
+    updateData.initial_ceiling = newCeiling;
+    updateData.remaining_ceiling = newCeiling;
+    updateData.current_ceiling = newCeiling;
+    updateData.last_ceiling_update_year = 0;
+  }
+
+  const { error: deviceError } = await supabaseClient
+    .from("devices")
+    .update(updateData)
+    .eq("id", deviceId);
+
+  if (deviceError) {
+    alert("Erreur mise à jour appareil : " + deviceError.message);
+    return;
+  }
+
+  const { error: requestError } = await supabaseClient
+    .from("device_change_requests")
+    .update({
+      status: "approuve",
+      reviewed_at: new Date().toISOString()
+    })
+    .eq("id", requestId);
+
+  if (requestError) {
+    alert("Erreur mise à jour demande appareil : " + requestError.message);
+    return;
+  }
+
+  alert("Demande appareil approuvée.");
+  loadDeviceChangeRequests();
+  loadStats();
+}
+
+async function rejectDeviceChangeRequest(requestId) {
+  const { error } = await supabaseClient
+    .from("device_change_requests")
+    .update({
+      status: "refuse",
+      reviewed_at: new Date().toISOString()
+    })
+    .eq("id", requestId);
+
+  if (error) {
+    alert("Erreur refus demande appareil : " + error.message);
+    return;
+  }
+
+  alert("Demande appareil refusée.");
+  loadDeviceChangeRequests();
+}
+
+/* =========================
+   PERFORMANCES
+========================= */
+
+function isDateInRange(dateValue, startDate, endDate) {
+  if (!dateValue) return false;
+
+  const date = new Date(dateValue);
+  const start = startDate ? new Date(startDate) : null;
+  const end = endDate ? new Date(endDate) : null;
+
+  if (start && date < start) return false;
+
+  if (end) {
+    end.setHours(23, 59, 59, 999);
+    if (date > end) return false;
+  }
+
+  return true;
+}
+
+async function calculateEstimatedMRR() {
+  let total = 0;
+
+  const { data: profiles, error: profilesError } = await supabaseClient
+    .from("profiles")
+    .select("status, plan, role");
+
+  if (profilesError) {
+    alert("Erreur MRR clients : " + profilesError.message);
+    return 0;
+  }
+
+  const { data: devices, error: devicesError } = await supabaseClient
+    .from("devices")
+    .select("status, plan");
+
+  if (devicesError) {
+    alert("Erreur MRR appareils : " + devicesError.message);
+    return 0;
+  }
+
+  profiles
+    .filter(p => p.role !== "admin")
+    .forEach(client => {
+      if (cleanValue(client.status) === "actif") {
+        total += getPlanPrice(client.plan);
+      }
+    });
+
+  devices.forEach(device => {
+    if (cleanValue(device.status) === "actif") {
+      total += getPlanPrice(device.plan);
+    }
+  });
+
+  return total;
+}
+
+async function loadPerformances() {
+  const startDate = document.getElementById("perf-start-date").value;
+  const endDate = document.getElementById("perf-end-date").value;
+
+  const { data: interventions, error } = await supabaseClient
+    .from("interventions")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    alert("Erreur performances : " + error.message);
+    return;
+  }
+
+  const filtered = interventions.filter(item => {
+    const dateToCheck = item.processed_at || item.created_at || item.problem_date;
+    return isDateInRange(dateToCheck, startDate, endDate);
+  });
+
+  const completed = filtered.filter(item => item.status === "termine");
+
+  let totalRepairCost = 0;
+  let totalRemainders = 0;
+  let totalCoverage = 0;
+
+  completed.forEach(item => {
+    const repairCost = Number(item.repair_cost || 0);
+    const remainder = Number(item.client_remainder || 0);
+    const coverage = Math.max(repairCost - remainder, 0);
+
+    totalRepairCost += repairCost;
+    totalRemainders += remainder;
+    totalCoverage += coverage;
+  });
+
+  let paidQuery = supabaseClient
+  .from("invoices")
+  .select("total_amount, paid_at")
+  .eq("status", "paid");
+
+if (startDate) {
+  paidQuery = paidQuery.gte("paid_at", startDate);
+}
+
+if (endDate) {
+  const end = new Date(endDate);
+  end.setHours(23, 59, 59, 999);
+  paidQuery = paidQuery.lte("paid_at", end.toISOString());
+}
+
+const { data: paidPeriodInvoices, error: paidPeriodError } = await paidQuery;
+
+if (paidPeriodError) {
+  alert("Erreur revenus période : " + paidPeriodError.message);
+  return;
+}
+
+let paidRevenuePeriod = 0;
+
+paidPeriodInvoices.forEach(invoice => {
+  paidRevenuePeriod += Number(invoice.total_amount || 0);
+});
+
+  document.getElementById("perf-total-interventions").innerText = filtered.length;
+  document.getElementById("perf-completed-interventions").innerText = completed.length;
+  document.getElementById("perf-repair-cost").innerText = formatMoney(totalRepairCost);
+  document.getElementById("perf-coverage").innerText = formatMoney(totalCoverage);
+  document.getElementById("perf-remainders").innerText = formatMoney(totalRemainders);
+ document.getElementById("perf-mrr").innerText = formatMoney(paidRevenuePeriod);
+
+  await displayPerformanceInterventions(filtered);
+}
+
+async function displayPerformanceInterventions(interventions) {
+  const container = document.getElementById("performance-interventions-list");
+  container.innerHTML = "";
+
+  if (interventions.length === 0) {
+    container.innerHTML = `
+      <tr>
+        <td colspan="8">Aucune intervention sur cette période.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  for (const item of interventions) {
+    const { data: profile } = await supabaseClient
+      .from("profiles")
+      .select("full_name")
+      .eq("id", item.user_id)
+      .single();
+
+    const repairCost = Number(item.repair_cost || 0);
+    const remainder = Number(item.client_remainder || 0);
+    const coverage = Math.max(repairCost - remainder, 0);
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${item.processed_at ? new Date(item.processed_at).toLocaleDateString("fr-FR") : "-"}</td>
+      <td>${profile?.full_name || "Client inconnu"}</td>
+      <td>${item.problem_type || "-"}</td>
+      <td>${formatMoney(repairCost)}</td>
+      <td>${formatMoney(coverage)}</td>
+      <td>${formatMoney(remainder)}</td>
+      <td><span class="status ${getStatusClass(item.status)}">${item.status || "en_attente"}</span></td>
+      <td>
+        <a class="btn btn-light" href="intervention-detail.html?id=${item.id}">
+          Voir
+        </a>
+      </td>
+    `;
+
+    container.appendChild(row);
+  }
+}
+
+/* =========================
+   EVENTS
+========================= */
+
+document.getElementById("search-client").addEventListener("input", displayAllClients);
+document.getElementById("filter-client-status").addEventListener("change", displayAllClients);
+
+document.getElementById("search-intervention-client").addEventListener("input", filterInterventions);
+document.getElementById("filter-intervention-status").addEventListener("change", filterInterventions);
+
+/* =========================
+   DÉMARRAGE
+========================= */
+
+const backToTopBtn = document.getElementById("backToTop");
+
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 400) {
+    backToTopBtn.classList.add("show");
+  } else {
+    backToTopBtn.classList.remove("show");
+  }
+});
+
+backToTopBtn.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+});
+
+
+
+checkAdmin();
+
+async function loadRecentPayments() {
+  const container = document.getElementById("recent-payments-list");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const { data: payments, error } = await supabaseClient
+    .from("invoices")
+    .select("*")
+    .eq("status", "paid")
+    .order("paid_at", { ascending: false })
+    .limit(5);
+
+  if (error) {
+    alert("Erreur paiements récents : " + error.message);
+    return;
+  }
+
+  if (payments.length === 0) {
+    container.innerHTML = `
+      <div class="list-item">
+        <span>Aucun paiement récent.</span>
+      </div>
+    `;
+    return;
+  }
+
+  for (const payment of payments) {
+    const { data: profile } = await supabaseClient
+      .from("profiles")
+      .select("full_name")
+      .eq("id", payment.user_id)
+      .single();
+
+    const item = document.createElement("div");
+    item.className = "list-item";
+
+    item.innerHTML = `
+      <strong>${formatMoney(payment.total_amount || payment.amount)} — ${payment.plan || "-"}</strong>
+      <span>
+        ${profile?.full_name || "Client inconnu"} •
+        ${payment.paid_at ? new Date(payment.paid_at).toLocaleString("fr-FR") : "-"}
+      </span>
+    `;
+
+    container.appendChild(item);
+  }
+}
+
+</script>
+</body>
+</html>

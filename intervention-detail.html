@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Détail intervention | I-PROTECT</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#f9fafb;
+  color:#111827;
+}
+
+.header{
+  background:white;
+  padding:15px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-box{
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  background:#f3e8ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.logo-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.container{
+  max-width:900px;
+  margin:30px auto;
+  padding:20px;
+}
+
+.panel{
+  background:white;
+  border-radius:24px;
+  padding:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.06);
+  margin-bottom:20px;
+}
+
+h1{
+  margin-bottom:8px;
+}
+
+.subtitle{
+  color:#6b7280;
+  margin-bottom:25px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+  gap:16px;
+}
+
+.info-box{
+  background:#f9fafb;
+  border:1px solid #eee;
+  border-radius:16px;
+  padding:15px;
+}
+
+.info-box small{
+  display:block;
+  color:#6b7280;
+  margin-bottom:6px;
+  font-weight:600;
+}
+
+.info-box strong{
+  font-size:16px;
+}
+
+.description{
+  margin-top:20px;
+  background:#f9fafb;
+  border-radius:16px;
+  padding:18px;
+  line-height:1.6;
+  color:#374151;
+}
+
+.actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+.btn{
+  padding:13px 18px;
+  border:none;
+  border-radius:14px;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+}
+
+.btn-purple{
+  background:#7c3aed;
+  color:white;
+}
+
+.btn-green{
+  background:#16a34a;
+  color:white;
+}
+
+.btn-red{
+  background:#dc2626;
+  color:white;
+}
+
+.btn-light{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+.status{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+  background:#fef3c7;
+  color:#92400e;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-box">
+      <img src="logo.png" alt="Logo I-PROTECT">
+    </div>
+    <div>
+      <strong>I-PROTECT</strong><br>
+      <small>Détail intervention</small>
+    </div>
+  </div>
+
+  <a href="dashboard-admin.html" class="btn btn-light">← Retour admin</a>
+</header>
+
+<main class="container">
+
+  <h1>Détail de la demande</h1>
+  <p class="subtitle">Consultez les informations et mettez à jour le statut.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div class="info-box">
+        <small>Client</small>
+        <strong id="client-name">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>Téléphone</small>
+        <strong id="client-phone">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>Modèle</small>
+        <strong id="phone-model">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>IMEI</small>
+        <strong id="imei">...</strong>
+      </div>
+<div class="info-box">
+  <small>Appareil concerné</small>
+  <strong id="device-model">...</strong>
+</div>
+<div class="info-box">
+  <small>Plafond initial</small>
+  <strong id="device-initial-ceiling">...</strong>
+</div>
+
+<div class="info-box">
+  <small>Plafond restant</small>
+  <strong id="device-remaining-ceiling">...</strong>
+</div>
+<div class="info-box">
+  <small>IMEI appareil</small>
+  <strong id="device-imei">...</strong>
+</div>
+
+<div class="info-box">
+  <small>Formule appareil</small>
+  <strong id="device-plan">...</strong>
+</div>
+      <div class="info-box">
+        <small>Type de problème</small>
+        <strong id="problem-type">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>Date du problème</small>
+        <strong id="problem-date">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>Statut</small>
+        <span class="status" id="status">...</span>
+      </div>
+    </div>
+
+    <div class="description">
+      <strong>Description :</strong>
+      <p id="description">...</p>
+    </div>
+
+    <div class="info-box" style="margin-top:20px;">
+  <small>Coût de l’intervention</small>
+  <input
+    type="number"
+    id="repair-cost"
+    placeholder="Ex : 15000"
+    style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:8px;"
+  >
+</div>
+<div class="info-box" style="margin-top:15px;">
+  <small>Reliquat à payer par le client</small>
+  <strong id="client-remainder">0 FCFA</strong>
+</div>
+<div class="actions">
+  <button class="btn btn-purple" onclick="updateStatus('en_cours')">Mettre en cours</button>
+  <button class="btn btn-green" onclick="completeIntervention()">Marquer terminé</button>
+  <button class="btn btn-red" onclick="updateStatus('refuse')">Refuser</button>
+
+  <a class="btn btn-light" href="#" id="invoice-link">
+    Voir facture
+  </a>
+</div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://tzwltqnkolkgemdhiimp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6d2x0cW5rb2xrZ2VtZGhpaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMzk3MDIsImV4cCI6MjA5MjkxNTcwMn0.9_xIrz6030zEoGFhD6iPN3cq6Z8_aZsDuLVipeY5D0o";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const params = new URLSearchParams(window.location.search);
+const interventionId = params.get("id");
+let currentRemainingCeiling = 0;
+
+function cleanValue(value) {
+  return (value || "").toString().trim().toLowerCase();
+}
+
+function getBaseCeiling(plan) {
+  const cleanPlan = cleanValue(plan);
+
+  if (cleanPlan === "starter") return 40000;
+  if (cleanPlan === "plus") return 80000;
+  if (cleanPlan === "elite") return 130000;
+
+  return 0;
+}
+
+async function protectAdmin() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    window.location.href = "connexion.html";
+    return;
+  }
+
+  const { data: profile } = await supabaseClient
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.role !== "admin") {
+    window.location.href = "dashboard-client.html";
+    return;
+  }
+
+  loadIntervention();
+}
+
+async function loadIntervention() {
+  if (!interventionId) {
+    alert("Intervention introuvable.");
+    window.location.href = "dashboard-admin.html";
+    return;
+  }
+
+  const { data: intervention, error } = await supabaseClient
+    .from("interventions")
+    .select("*")
+    .eq("id", interventionId)
+    .single();
+
+  if (error) {
+    alert("Erreur : " + error.message);
+    return;
+  }
+
+ const { data: client, error: clientError } = await supabaseClient
+  .from("profiles")
+  .select("*")
+  .eq("id", intervention.user_id)
+  .single();
+
+if (clientError || !client) {
+  alert("Erreur chargement client : " + clientError.message);
+  return;
+}
+  let deviceModel = client?.phone_model || "-";
+let deviceImei = client?.imei || "-";
+let devicePlan = client?.plan || "-";
+let deviceInitialCeiling = client?.initial_ceiling || 0;
+let deviceRemainingCeiling = client?.remaining_ceiling || 0;
+  if (intervention.device_id) {
+    const { data: device, error: deviceError } = await supabaseClient
+  .from("devices")
+  .select("*")
+  .eq("id", intervention.device_id)
+  .single();
+
+   if (!deviceError && device) {
+  deviceModel = device.phone_model || "-";
+  deviceImei = device.imei || "-";
+  devicePlan = device.plan || "-";
+  deviceInitialCeiling = device.initial_ceiling || 0;
+  deviceRemainingCeiling = device.remaining_ceiling || 0;
+}
+  }
+
+  document.getElementById("client-name").innerText = client?.full_name || "Client inconnu";
+  document.getElementById("client-phone").innerText = client?.phone || "-";
+  document.getElementById("phone-model").innerText = client?.phone_model || "-";
+  document.getElementById("imei").innerText = client?.imei || "-";
+
+  document.getElementById("device-model").innerText = deviceModel;
+  document.getElementById("device-imei").innerText = deviceImei;
+  document.getElementById("device-plan").innerText = devicePlan;
+  document.getElementById("device-initial-ceiling").innerText =
+  deviceInitialCeiling.toLocaleString("fr-FR") + " FCFA";
+
+document.getElementById("device-remaining-ceiling").innerText =
+  deviceRemainingCeiling.toLocaleString("fr-FR") + " FCFA";
+
+currentRemainingCeiling = deviceRemainingCeiling;
+
+  document.getElementById("problem-type").innerText = intervention.problem_type || "-";
+  document.getElementById("problem-date").innerText = intervention.problem_date || "-";
+
+  const statusEl = document.getElementById("status");
+  statusEl.innerText = intervention.status || "-";
+
+  if (intervention.status === "termine") {
+    statusEl.style.background = "#dcfce7";
+    statusEl.style.color = "#166534";
+  } else if (intervention.status === "en_cours") {
+    statusEl.style.background = "#fef3c7";
+    statusEl.style.color = "#92400e";
+  } else if (intervention.status === "refuse") {
+    statusEl.style.background = "#fee2e2";
+    statusEl.style.color = "#991b1b";
+  }
+
+  document.getElementById("description").innerText = intervention.description || "-";
+  document.getElementById("invoice-link").href =
+  "facture-intervention.html?id=" + interventionId;
+}
+
+async function updateStatus(newStatus) {
+  const { error } = await supabaseClient
+    .from("interventions")
+    .update({ status: newStatus })
+    .eq("id", interventionId);
+
+  if (error) {
+    alert("Erreur : " + error.message);
+    return;
+  }
+
+  alert("Statut mis à jour !");
+  loadIntervention();
+}
+function calculateRemainder() {
+  const cost = Number(document.getElementById("repair-cost").value || 0);
+  const remainder = Math.max(cost - currentRemainingCeiling, 0);
+
+  document.getElementById("client-remainder").innerText =
+    remainder.toLocaleString("fr-FR") + " FCFA";
+}
+async function completeIntervention() {
+  const cost = Number(document.getElementById("repair-cost").value);
+  const clientRemainder = Math.max(cost - currentRemainingCeiling, 0);
+
+  if (!cost || cost <= 0) {
+    alert("Entre le coût de l’intervention.");
+    return;
+  }
+
+  // 1. Récupérer l’intervention
+  const { data: intervention, error: interventionError } = await supabaseClient
+    .from("interventions")
+    .select("*")
+    .eq("id", interventionId)
+    .single();
+
+  if (interventionError || !intervention) {
+    alert("Erreur intervention : " + interventionError.message);
+    return;
+  }
+
+  console.log("Intervention récupérée :", intervention);
+
+  // 2. Si device_id existe = appareil secondaire
+  if (intervention.device_id) {
+    const { data: device, error: deviceError } = await supabaseClient
+      .from("devices")
+.select("phone_model, imei, plan, initial_ceiling, remaining_ceiling")
+      .eq("id", intervention.device_id)
+      .single();
+
+    if (deviceError || !device) {
+      alert("Erreur appareil : " + deviceError.message);
+      return;
+    }
+
+   const oldRemaining = Number(device.remaining_ceiling || 0);
+const newRemaining = Math.max(oldRemaining - cost, 0);
+
+    const { error: updateDeviceError } = await supabaseClient
+      .from("devices")
+      .update({
+        remaining_ceiling: newRemaining,
+last_intervention_date: new Date().toISOString().split("T")[0]
+      })
+      .eq("id", intervention.device_id);
+
+    if (updateDeviceError) {
+      alert("Erreur mise à jour plafond appareil : " + updateDeviceError.message);
+      return;
+    }
+
+    console.log("Plafond appareil mis à jour :", oldRemaining, "→", newRemaining);
+  }
+
+  // 3. Si device_id est vide/null = appareil principal
+  else {
+    const { data: profile, error: profileError } = await supabaseClient
+      .from("profiles")
+      .select("remaining_ceiling, plan")
+      .eq("id", intervention.user_id)
+      .single();
+
+    if (profileError || !profile) {
+      alert("Erreur profil : " + profileError.message);
+      return;
+    }
+
+    const oldRemaining = Number(profile.remaining_ceiling || 0);
+const newRemaining = Math.max(oldRemaining - cost, 0);
+    const { error: updateProfileError } = await supabaseClient
+  .from("profiles")
+  .update({
+    remaining_ceiling: newRemaining,
+last_intervention_date: new Date().toISOString().split("T")[0]
+  })
+  .eq("id", intervention.user_id);
+
+    if (updateProfileError) {
+      alert("Erreur mise à jour plafond client : " + updateProfileError.message);
+      return;
+    }
+
+    console.log("Plafond client mis à jour :", oldRemaining, "→", newRemaining);
+  }
+
+  // 4. Mettre à jour l’intervention
+  const { error: updateInterventionError } = await supabaseClient
+    .from("interventions")
+   .update({
+  repair_cost: cost,
+  client_remainder: clientRemainder,
+  status: "termine",
+  processed_at: new Date().toISOString()
+})
+    .eq("id", interventionId);
+
+  if (updateInterventionError) {
+    alert("Erreur finalisation intervention : " + updateInterventionError.message);
+    return;
+  }
+
+  alert("Intervention terminée. Plafond mis à jour.");
+  loadIntervention();
+}
+
+
+document.getElementById("repair-cost").addEventListener("input", calculateRemainder);
+protectAdmin();
+
+
+
+</script>
+
+</body>
+</html>

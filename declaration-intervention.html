@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demande d’intervention | I-PROTECT</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#f9fafb;
+}
+
+/* HEADER */
+.header{
+  background:white;
+  padding:15px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-box{
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  background:#f3e8ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.logo-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.container{
+  max-width:800px;
+  margin:30px auto;
+  padding:20px;
+}
+
+h1{
+  margin-bottom:10px;
+}
+
+.subtitle{
+  color:#6b7280;
+  margin-bottom:25px;
+}
+
+/* FORM */
+.form{
+  background:white;
+  padding:25px;
+  border-radius:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+.form-group{
+  margin-bottom:18px;
+}
+
+label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:600;
+  font-size:14px;
+}
+
+input, select, textarea{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #ddd;
+  font-size:14px;
+}
+
+textarea{
+  resize:none;
+  height:120px;
+}
+
+input:focus, select:focus, textarea:focus{
+  outline:none;
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTON */
+.btn{
+  width:100%;
+  padding:16px;
+  background:#7c3aed;
+  color:white;
+  border:none;
+  border-radius:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btn:hover{
+  background:#6d28d9;
+}
+
+/* INFO BOX */
+.info{
+  margin-top:20px;
+  background:#f3e8ff;
+  padding:15px;
+  border-radius:14px;
+  font-size:13px;
+  color:#5b21b6;
+  line-height:1.5;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  
+  <div class="logo">
+    <div class="logo-box">
+      <img src="logo.png">
+    </div>
+    <strong>I-PROTECT</strong>
+  </div>
+
+  <div>
+    <a href="dashboard-client.html">← Retour</a>
+  </div>
+
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+  <h1>Demande d’intervention</h1>
+  <p class="subtitle">
+    Déclarez un problème sur votre téléphone
+  </p>
+
+  <form class="form" id="intervention-form">
+
+    <div class="form-group">
+  <label>Appareil concerné</label>
+  <select id="device_id" required>
+    <option value="">-- Choisir un appareil --</option>
+  </select>
+</div>
+    <div class="form-group">
+      <label>Type de problème</label>
+      <select id="problem_type" required>
+        <option>Écran cassé</option>
+        <option>Batterie</option>
+        <option>Vitre arrière</option>
+        <option>Appareil photo</option>
+        <option>Charge</option>
+        <option>Autre</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Description du problème</label>
+      <textarea id="description" placeholder="Expliquez le problème..." required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Date du problème</label>
+      <input type="date" id="problem_date" required>
+    </div>
+
+    <div class="form-group">
+      <label>Joindre une photo (optionnel)</label>
+      <input type="file">
+    </div>
+
+    <button class="btn">Envoyer la demande</button>
+
+    <div class="info">
+      Après soumission, vous devrez déposer votre téléphone en présentiel pour diagnostic.
+      Toute intervention est soumise aux conditions de votre formule.
+    </div>
+
+  </form>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://tzwltqnkolkgemdhiimp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6d2x0cW5rb2xrZ2VtZGhpaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMzk3MDIsImV4cCI6MjA5MjkxNTcwMn0.9_xIrz6030zEoGFhD6iPN3cq6Z8_aZsDuLVipeY5D0o";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+
+async function getUser() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    window.location.href = "connexion.html";
+    return;
+  }
+
+  currentUser = user;
+  loadUserDevices();
+}
+
+async function loadUserDevices() {
+  const { data: devices, error } = await supabaseClient
+    .from("devices")
+    .select("*")
+    .eq("user_id", currentUser.id);
+    const { data: profile } = await supabaseClient
+  .from("profiles")
+  .select("phone_model, imei, plan")
+  .eq("id", currentUser.id)
+  .single();
+
+  if (error) {
+    alert("Erreur chargement appareils : " + error.message);
+    return;
+  }
+
+  const select = document.getElementById("device_id");
+  select.innerHTML = '<option value="">-- Choisir un appareil --</option>';
+  if (profile?.phone_model && profile?.imei) {
+  const mainOption = document.createElement("option");
+ mainOption.value = "";
+  mainOption.textContent = `${profile.phone_model} - ${profile.imei} (${profile.plan})`;
+  select.appendChild(mainOption);
+}
+
+  devices.forEach(device => {
+    const option = document.createElement("option");
+    option.value = device.id;
+    option.textContent = `${device.phone_model} - ${device.imei} (${device.plan})`;
+    select.appendChild(option);
+  });
+}
+
+document.querySelector("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const problem_type = document.getElementById("problem_type").value;
+  const description = document.getElementById("description").value;
+  const problem_date = document.getElementById("problem_date").value;
+  const device_id = document.getElementById("device_id").value;
+
+  const { error } = await supabaseClient
+    .from("interventions")
+    .insert({
+      user_id: currentUser.id,
+     device_id: device_id || null,
+      problem_type: problem_type,
+      description: description,
+      problem_date: problem_date,
+      status: "en_attente"
+    });
+
+  if (error) {
+    alert("Erreur : " + error.message);
+    return;
+  }
+
+  alert("Demande envoyée !");
+  window.location.href = "dashboard-client.html";
+});
+
+getUser();
+</script>
+</body>
+</html>

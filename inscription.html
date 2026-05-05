@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription | I-PROTECT</title>
+
+  <style>
+    * {
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background:#ffffff;
+      display:flex;
+      justify-content:center;
+      padding:30px 15px;
+    }
+
+    .container {
+      width:100%;
+      max-width:500px;
+      background:white;
+      padding:30px;
+      border-radius:25px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.08);
+      border:1px solid #eee;
+    }
+
+    .logo-box {
+      width: 90px;
+      height: 90px;
+      margin:auto;
+      margin-bottom:20px;
+      border-radius:22px;
+      background:#f3e8ff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .logo-box img {
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+
+    h1 {
+      text-align:center;
+      margin-bottom:10px;
+    }
+
+    .subtitle {
+      text-align:center;
+      color:#666;
+      margin-bottom:25px;
+    }
+
+    .form-group {
+      margin-bottom:18px;
+    }
+
+    label {
+      display:block;
+      margin-bottom:6px;
+      font-weight:600;
+      font-size:14px;
+    }
+
+    input, select {
+      width:100%;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid #ddd;
+      font-size:14px;
+    }
+
+    input:focus, select:focus {
+      outline:none;
+      border-color:#7c3aed;
+      box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+    }
+
+    .btn {
+      width:100%;
+      padding:15px;
+      background:#7c3aed;
+      color:white;
+      border:none;
+      border-radius:16px;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:10px;
+    }
+
+    .btn:hover {
+      background:#6d28d9;
+    }
+
+    .bottom {
+      text-align:center;
+      margin-top:20px;
+      font-size:14px;
+    }
+
+    .bottom a {
+      color:#7c3aed;
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    .note {
+      margin-top:20px;
+      font-size:12px;
+      color:#666;
+      text-align:center;
+      background:#f9fafb;
+      padding:10px;
+      border-radius:12px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="logo-box">
+  <img src="logo.png" class="logo-img">
+</div>
+
+    <h1>Créer un compte</h1>
+    <p class="subtitle">Rejoignez I-PROTECT</p>
+
+    <form id="signup-form">
+
+      <div class="form-group">
+        <label>Nom et prénom</label>
+        <input type="text" id="full_name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Numéro de téléphone</label>
+        <input type="text" id="phone" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" required>
+      </div>
+
+      <div class="form-group">
+        <label>Modèle du téléphone</label>
+        <input type="text" id="phone_model" required>
+      </div>
+
+      <div class="form-group">
+        <label>Numéro IMEI</label>
+        <input type="text" id="imei" required>
+      </div>
+
+      <div class="form-group">
+        <label>Choisir une formule</label>
+        <select id="plan" required>
+  <option value="">-- Sélectionner --</option>
+  <option value="Starter">Starter - 2 900 FCFA</option>
+  <option value="Plus">Plus - 5 900 FCFA</option>
+  <option value="Elite">Elite - 9 900 FCFA</option>
+</select>
+      </div>
+
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="password" required>
+      </div>
+
+      <button class="btn" type="submit">S’inscrire</button>
+
+    </form>
+
+    <div class="bottom">
+      Déjà un compte ? <a href="connexion.html">Se connecter</a>
+    </div>
+
+    <div class="note">
+      Service d’assistance et de réparation téléphone par abonnement.  
+      Ce service n’est pas une assurance.
+    </div>
+
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://tzwltqnkolkgemdhiimp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6d2x0cW5rb2xrZ2VtZGhpaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMzk3MDIsImV4cCI6MjA5MjkxNTcwMn0.9_xIrz6030zEoGFhD6iPN3cq6Z8_aZsDuLVipeY5D0o";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+document.getElementById("signup-form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  alert("Bouton cliqué, inscription en cours...");
+
+  const full_name = document.getElementById("full_name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone_model = document.getElementById("phone_model").value.trim();
+  const imei = document.getElementById("imei").value.trim();
+  const plan = document.getElementById("plan").value;
+  const password = document.getElementById("password").value;
+
+  let plafond = 0;
+  if (plan === "Starter") plafond = 40000;
+  if (plan === "Plus") plafond = 80000;
+  if (plan === "Elite") plafond = 130000;
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    alert("Erreur Auth : " + error.message);
+    console.error(error);
+    return;
+  }
+
+  alert("Compte Auth créé");
+
+  const user = data.user;
+
+if (!user) {
+  alert("Compte créé. Vérifie ton email pour activer ton compte.");
+  window.location.href = "connexion.html";
+  return;
+}
+  const { error: profileError } = await supabaseClient
+    .from("profiles")
+    .insert({
+      id: user.id,
+      full_name: full_name,
+      phone: phone,
+      email: email,
+      phone_model: phone_model,
+      imei: imei,
+      plan: plan,
+      role: "client",
+status: "en_attente",
+current_ceiling: plafond,
+initial_ceiling: plafond,
+remaining_ceiling: plafond
+    });
+
+  if (profileError) {
+    alert("Erreur profil : " + profileError.message);
+    console.error(profileError);
+    return;
+  }
+
+  alert("Inscription réussie !");
+  window.location.href = "connexion.html";
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modifier mon profil | I-PROTECT</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#f9fafb;
+  color:#111827;
+}
+
+.header{
+  background:white;
+  padding:15px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-box{
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  background:#f3e8ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.logo-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.container{
+  max-width:650px;
+  margin:40px auto;
+  padding:20px;
+}
+
+.card{
+  background:white;
+  padding:30px;
+  border-radius:24px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.06);
+}
+
+h1{
+  margin-bottom:8px;
+}
+
+.subtitle{
+  color:#6b7280;
+  margin-bottom:25px;
+  line-height:1.5;
+}
+
+.form-group{
+  margin-bottom:18px;
+}
+
+label{
+  display:block;
+  font-weight:700;
+  margin-bottom:7px;
+  font-size:14px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #ddd;
+  font-size:14px;
+}
+
+input:focus{
+  outline:none;
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+.readonly{
+  background:#f9fafb;
+  color:#6b7280;
+}
+
+.btn{
+  padding:14px 18px;
+  border:none;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.btn-primary{
+  width:100%;
+  background:#7c3aed;
+  color:white;
+  margin-top:10px;
+}
+
+.btn-primary:hover{
+  background:#6d28d9;
+}
+
+.btn-light{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+.info{
+  margin-top:20px;
+  background:#f3e8ff;
+  color:#5b21b6;
+  padding:15px;
+  border-radius:14px;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+  gap:12px;
+  flex-wrap:wrap;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-box">
+      <img src="logo.png" alt="Logo I-PROTECT">
+    </div>
+    <strong>I-PROTECT</strong>
+  </div>
+
+  <a href="dashboard-client.html" class="btn btn-light">← Retour</a>
+</header>
+
+<main class="container">
+
+  <div class="card">
+
+    <h1>Modifier mes informations</h1>
+    <p class="subtitle">
+      Vous pouvez modifier votre nom et votre numéro de téléphone.
+      Les informations liées à l’appareil protégé doivent être validées par I-PROTECT.
+    </p>
+
+    <form id="profile-form">
+
+      <div class="form-group">
+        <label>Nom complet</label>
+        <input type="text" id="full_name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Numéro de téléphone</label>
+        <input type="text" id="phone" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" class="readonly" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Formule actuelle</label>
+        <input type="text" id="plan" class="readonly" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Modèle téléphone principal</label>
+        <input type="text" id="phone_model" class="readonly" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>IMEI téléphone principal</label>
+        <input type="text" id="imei" class="readonly" readonly>
+      </div>
+
+      <hr style="margin:25px 0; border:none; border-top:1px solid #eee;">
+
+<h2 style="font-size:18px; margin-bottom:15px;">Demande de modification sensible</h2>
+
+<div class="form-group">
+  <label>Information à modifier</label>
+  <select id="request-field">
+    <option value="">-- Choisir --</option>
+    <option value="email">Email</option>
+    <option value="plan">Formule</option>
+    <option value="phone_model">Modèle téléphone</option>
+    <option value="imei">IMEI</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label>Nouvelle valeur demandée</label>
+  <input type="text" id="request-new-value" placeholder="Entrez la nouvelle valeur">
+</div>
+
+<div class="form-group" id="plan-request-box" style="display:none;">
+  <label>Nouvelle formule souhaitée</label>
+  <select id="request-plan-value">
+    <option value="">-- Choisir une formule --</option>
+    <option value="Starter">Starter - 2 900 FCFA</option>
+    <option value="Plus">Plus - 5 900 FCFA</option>
+    <option value="Elite">Elite - 9 900 FCFA</option>
+  </select>
+</div>
+
+<button type="button" class="btn btn-light" style="width:100%;" onclick="sendChangeRequest()">
+  Envoyer la demande de modification
+</button>
+
+      <button type="submit" class="btn btn-primary">
+        Enregistrer les modifications
+      </button>
+
+      <hr style="margin:25px 0; border:none; border-top:1px solid #eee;">
+
+<h2 style="font-size:18px; margin-bottom:15px;">Demande de modification d’un appareil secondaire</h2>
+
+<div class="form-group">
+  <label>Appareil concerné</label>
+  <select id="device-request-id">
+    <option value="">-- Choisir un appareil --</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label>Information à modifier</label>
+  <select id="device-request-field">
+    <option value="">-- Choisir --</option>
+    <option value="phone_model">Modèle téléphone</option>
+    <option value="imei">IMEI</option>
+    <option value="plan">Formule</option>
+  </select>
+</div>
+
+<div class="form-group" id="device-text-request-box">
+  <label>Nouvelle valeur demandée</label>
+  <input type="text" id="device-request-new-value" placeholder="Entrez la nouvelle valeur">
+</div>
+
+<div class="form-group" id="device-plan-request-box" style="display:none;">
+  <label>Nouvelle formule souhaitée</label>
+  <select id="device-request-plan-value">
+    <option value="">-- Choisir une formule --</option>
+    <option value="Starter">Starter - 2 900 FCFA</option>
+    <option value="Plus">Plus - 5 900 FCFA</option>
+    <option value="Elite">Elite - 9 900 FCFA</option>
+  </select>
+</div>
+
+<button type="button" class="btn btn-light" style="width:100%;" onclick="sendDeviceChangeRequest()">
+  Envoyer la demande appareil
+</button>
+
+    </form>
+
+    <div class="info">
+      Pour modifier votre modèle de téléphone, votre IMEI ou votre formule,
+      contactez le support I-PROTECT. Ces informations nécessitent une vérification.
+    </div>
+
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://tzwltqnkolkgemdhiimp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6d2x0cW5rb2xrZ2VtZGhpaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMzk3MDIsImV4cCI6MjA5MjkxNTcwMn0.9_xIrz6030zEoGFhD6iPN3cq6Z8_aZsDuLVipeY5D0o";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUserId = null;
+
+async function checkUser() {
+  const { data: { user }, error } = await supabaseClient.auth.getUser();
+
+  if (error || !user) {
+    window.location.href = "connexion.html";
+    return;
+  }
+
+  currentUserId = user.id;
+loadProfile(user.id);
+loadUserDevicesForRequests();
+}
+
+async function loadProfile(userId) {
+  const { data: profile, error } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .single();
+
+  if (error) {
+    alert("Erreur chargement profil : " + error.message);
+    return;
+  }
+
+  document.getElementById("full_name").value = profile.full_name || "";
+  document.getElementById("phone").value = profile.phone || "";
+  document.getElementById("email").value = profile.email || "";
+  document.getElementById("plan").value = profile.plan || "";
+  document.getElementById("phone_model").value = profile.phone_model || "";
+  document.getElementById("imei").value = profile.imei || "";
+}
+
+document.getElementById("profile-form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const full_name = document.getElementById("full_name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+
+  if (!full_name || !phone) {
+    alert("Veuillez remplir le nom et le téléphone.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("profiles")
+    .update({
+      full_name: full_name,
+      phone: phone
+    })
+    .eq("id", currentUserId);
+
+  if (error) {
+    alert("Erreur modification : " + error.message);
+    return;
+  }
+
+  alert("Informations mises à jour avec succès.");
+  window.location.href = "dashboard-client.html";
+});
+
+document.getElementById("request-field").addEventListener("change", function() {
+  const fieldName = this.value;
+  const textInput = document.getElementById("request-new-value");
+  const planBox = document.getElementById("plan-request-box");
+
+  if (fieldName === "plan") {
+    textInput.parentElement.style.display = "none";
+    planBox.style.display = "block";
+  } else {
+    textInput.parentElement.style.display = "block";
+    planBox.style.display = "none";
+  }
+});
+
+async function sendChangeRequest() {
+  const fieldName = document.getElementById("request-field").value;
+
+let newValue = "";
+
+if (fieldName === "plan") {
+  newValue = document.getElementById("request-plan-value").value;
+} else {
+  newValue = document.getElementById("request-new-value").value.trim();
+}
+
+  if (!fieldName || !newValue) {
+    alert("Choisis une information et indique la nouvelle valeur.");
+    return;
+  }
+
+  const { data: profile, error: profileError } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", currentUserId)
+    .single();
+
+  if (profileError || !profile) {
+    alert("Erreur profil : " + profileError.message);
+    return;
+  }
+
+  const oldValue = profile[fieldName] || "";
+
+  const { error } = await supabaseClient
+    .from("profile_change_requests")
+    .insert({
+      user_id: currentUserId,
+      field_name: fieldName,
+      old_value: oldValue,
+      new_value: newValue,
+      status: "en_attente"
+    });
+
+  if (error) {
+    alert("Erreur demande : " + error.message);
+    return;
+  }
+
+  alert("Demande envoyée. Elle sera examinée par l’administrateur.");
+  document.getElementById("request-field").value = "";
+  document.getElementById("request-new-value").value = "";
+  document.getElementById("request-plan-value").value = "";
+document.getElementById("plan-request-box").style.display = "none";
+document.getElementById("request-new-value").parentElement.style.display = "block";
+}
+
+let userDevices = [];
+
+async function loadUserDevicesForRequests() {
+  const { data: devices, error } = await supabaseClient
+    .from("devices")
+    .select("*")
+    .eq("user_id", currentUserId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    alert("Erreur chargement appareils : " + error.message);
+    return;
+  }
+
+  userDevices = devices || [];
+
+  const select = document.getElementById("device-request-id");
+  select.innerHTML = '<option value="">-- Choisir un appareil --</option>';
+
+  userDevices.forEach(device => {
+    const option = document.createElement("option");
+    option.value = device.id;
+    option.textContent = `${device.phone_model || "-"} - ${device.imei || "-"} (${device.plan || "-"})`;
+    select.appendChild(option);
+  });
+}
+
+document.getElementById("device-request-field").addEventListener("change", function() {
+  const fieldName = this.value;
+  const textBox = document.getElementById("device-text-request-box");
+  const planBox = document.getElementById("device-plan-request-box");
+
+  if (fieldName === "plan") {
+    textBox.style.display = "none";
+    planBox.style.display = "block";
+  } else {
+    textBox.style.display = "block";
+    planBox.style.display = "none";
+  }
+});
+
+async function sendDeviceChangeRequest() {
+  const deviceId = document.getElementById("device-request-id").value;
+  const fieldName = document.getElementById("device-request-field").value;
+
+  let newValue = "";
+
+  if (fieldName === "plan") {
+    newValue = document.getElementById("device-request-plan-value").value;
+  } else {
+    newValue = document.getElementById("device-request-new-value").value.trim();
+  }
+
+  if (!deviceId || !fieldName || !newValue) {
+    alert("Choisis un appareil, une information et indique la nouvelle valeur.");
+    return;
+  }
+
+  const device = userDevices.find(d => d.id === deviceId);
+
+  if (!device) {
+    alert("Appareil introuvable.");
+    return;
+  }
+
+  const oldValue = device[fieldName] || "";
+
+  const { error } = await supabaseClient
+    .from("device_change_requests")
+    .insert({
+      user_id: currentUserId,
+      device_id: deviceId,
+      field_name: fieldName,
+      old_value: oldValue,
+      new_value: newValue,
+      status: "en_attente"
+    });
+
+  if (error) {
+    alert("Erreur demande appareil : " + error.message);
+    return;
+  }
+
+  alert("Demande envoyée. Elle sera examinée par l’administrateur.");
+
+  document.getElementById("device-request-id").value = "";
+  document.getElementById("device-request-field").value = "";
+  document.getElementById("device-request-new-value").value = "";
+  document.getElementById("device-request-plan-value").value = "";
+  document.getElementById("device-text-request-box").style.display = "block";
+  document.getElementById("device-plan-request-box").style.display = "none";
+}
+
+checkUser();
+</script>
+
+</body>
+</html>

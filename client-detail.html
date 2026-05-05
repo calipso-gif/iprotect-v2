@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Détail client | I-PROTECT</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif;}
+body{background:#f9fafb;color:#111827;}
+.header{background:white;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-box{width:50px;height:50px;border-radius:15px;background:#f3e8ff;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.logo-box img{width:100%;height:100%;object-fit:contain;}
+.container{max-width:1000px;margin:30px auto;padding:20px;}
+.panel{background:white;border-radius:24px;padding:25px;box-shadow:0 10px 30px rgba(0,0,0,0.06);margin-bottom:20px;}
+h1{margin-bottom:8px;}
+.subtitle{color:#6b7280;margin-bottom:25px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+.info-box{background:#f9fafb;border:1px solid #eee;border-radius:16px;padding:15px;}
+.info-box small{display:block;color:#6b7280;margin-bottom:6px;font-weight:600;}
+.info-box strong{font-size:16px;}
+.status{display:inline-block;padding:7px 12px;border-radius:999px;font-size:13px;font-weight:700;}
+.active{background:#dcfce7;color:#166534;}
+.pending{background:#fef3c7;color:#92400e;}
+.suspended{background:#fee2e2;color:#991b1b;}
+.btn{padding:12px 16px;border:none;border-radius:14px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;margin:5px;}
+.btn-purple{background:#7c3aed;color:white;}
+.btn-green{background:#16a34a;color:white;}
+.btn-red{background:#dc2626;color:white;}
+.btn-light{background:#ede9fe;color:#6d28d9;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th,td{padding:14px;text-align:left;border-bottom:1px solid #e5e7eb;white-space:nowrap;}
+th{color:#6b7280;font-size:12px;text-transform:uppercase;}
+.actions{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;}
+
+.filters input{
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-box">
+      <img src="logo.png" alt="Logo I-PROTECT">
+    </div>
+    <div>
+      <strong>I-PROTECT</strong><br>
+      <small>Fiche client</small>
+    </div>
+  </div>
+
+  <a href="dashboard-admin.html" class="btn btn-light">← Retour admin</a>
+</header>
+
+<main class="container">
+
+  <h1>Fiche client</h1>
+  <p class="subtitle">Informations du client, abonnement et historique d’interventions.</p>
+
+  <section class="panel">
+    <div class="grid">
+      
+      <div class="info-box">
+        <small>Nom complet</small>
+        <strong id="client-name">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>Téléphone</small>
+        <strong id="client-phone">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>Email</small>
+        <strong id="client-email">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>Formule</small>
+        <strong id="client-plan">...</strong>
+      </div>
+<div class="info-box">
+  <small>Plafond initial</small>
+  <strong id="client-initial-ceiling">...</strong>
+</div>
+
+<div class="info-box">
+  <small>Plafond restant</small>
+  <strong id="client-remaining-ceiling">...</strong>
+</div>
+
+<div class="info-box">
+  <small>Prochaine échéance</small>
+  <strong id="client-next-payment">...</strong>
+</div>
+
+<div class="info-box">
+  <small>Statut paiement</small>
+  <span class="status pending" id="client-payment-status">...</span>
+</div>
+
+      <div class="info-box">
+        <small>Statut</small>
+        <span class="status pending" id="client-status">...</span>
+      </div>
+
+      <div class="info-box">
+        <small>Modèle téléphone</small>
+        <strong id="phone-model">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>IMEI</small>
+        <strong id="client-imei">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>Date d’inscription</small>
+        <strong id="created-at">...</strong>
+      </div>
+
+      <div class="info-box">
+        <small>Nombre d’interventions</small>
+        <strong id="intervention-count">...</strong>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-green" onclick="updateClientStatus('actif')">Activer</button>
+      <button class="btn btn-light" onclick="updateClientStatus('en_attente')">Mettre en attente</button>
+      <button class="btn btn-red" onclick="updateClientStatus('suspendu')">Suspendre</button>
+      <button class="btn btn-purple" onclick="updateClientStatus('resilie')">Résilier</button>
+    </div>
+  </section>
+<section class="panel">
+  <h2>Autres appareils du client</h2>
+
+  <div class="table-wrap">
+    <table>
+     <thead>
+  <tr>
+    <th>Modèle</th>
+    <th>IMEI</th>
+    <th>Formule</th>
+    <th>Plafond initial</th>
+    <th>Plafond restant</th>
+    <th>Prochaine échéance</th>
+    <th>Statut paiement</th>
+    <th>Statut</th>
+    <th>Action</th>
+  </tr>
+</thead>
+
+      <tbody id="client-devices-list"></tbody>
+    </table>
+  </div>
+</section>
+  <section class="panel">
+    <h2>Historique des interventions</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Problème</th>
+            <th>Description</th>
+            <th>Statut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="interventions-history">
+          <!-- Historique -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+ <section class="panel" id="section-client-payments">
+  <h2>Historique des paiements</h2>
+
+  <div class="filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+    <input type="date" id="payment-start-date">
+    <input type="date" id="payment-end-date">
+
+    <button class="btn btn-purple" onclick="displayClientPayments()">
+      Filtrer
+    </button>
+
+    <button class="btn btn-light" onclick="resetPaymentFilters()">
+      Réinitialiser
+    </button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date paiement</th>
+          <th>Appareil</th>
+          <th>Type facture</th>
+          <th>Formule</th>
+          <th>Échéance réglée</th>
+          <th>Montant</th>
+          <th>Pénalité</th>
+          <th>Total payé</th>
+        </tr>
+      </thead>
+
+      <tbody id="client-payments-history"></tbody>
+    </table>
+  </div>
+</section> 
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://tzwltqnkolkgemdhiimp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6d2x0cW5rb2xrZ2VtZGhpaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMzk3MDIsImV4cCI6MjA5MjkxNTcwMn0.9_xIrz6030zEoGFhD6iPN3cq6Z8_aZsDuLVipeY5D0o";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const params = new URLSearchParams(window.location.search);
+const clientId = params.get("id");
+
+async function protectAdmin() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    window.location.href = "connexion.html";
+    return;
+  }
+
+  const { data: profile } = await supabaseClient
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.role !== "admin") {
+    window.location.href = "dashboard-client.html";
+    return;
+  }
+
+  loadClient();
+}
+
+function getStatusClass(status) {
+  if (status === "actif" || status === "termine") return "active";
+  if (status === "suspendu" || status === "refuse" || status === "resilie") return "suspended";
+  return "pending";
+}
+
+function formatDate(dateValue) {
+  if (!dateValue) return "-";
+  return new Date(dateValue).toLocaleDateString("fr-FR");
+}
+
+async function loadClient() {
+  if (!clientId) {
+    alert("Client introuvable.");
+    window.location.href = "dashboard-admin.html";
+    return;
+  }
+
+  const { data: client, error } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", clientId)
+    .single();
+
+  if (error) {
+    alert("Erreur client : " + error.message);
+    return;
+  }
+
+  document.getElementById("client-name").innerText = client.full_name || "-";
+  document.getElementById("client-phone").innerText = client.phone || "-";
+  document.getElementById("client-email").innerText = client.email || "-";
+  document.getElementById("client-plan").innerText = client.plan || "-";
+  document.getElementById("client-initial-ceiling").innerText =
+  (client.initial_ceiling || 0).toLocaleString("fr-FR") + " FCFA";
+
+document.getElementById("client-remaining-ceiling").innerText =
+  (client.remaining_ceiling || 0).toLocaleString("fr-FR") + " FCFA";
+  document.getElementById("phone-model").innerText = client.phone_model || "-";
+  document.getElementById("client-imei").innerText = client.imei || "-";
+  document.getElementById("created-at").innerText = formatDate(client.created_at);
+
+  const statusEl = document.getElementById("client-status");
+  statusEl.innerText = client.status || "en_attente";
+  statusEl.className = "status " + getStatusClass(client.status);
+
+  loadClientInterventions();
+loadClientDevices();
+loadClientPayments();
+
+  document.getElementById("client-next-payment").innerText =
+  client.next_payment_date ? new Date(client.next_payment_date).toLocaleDateString("fr-FR") : "Non défini";
+
+document.getElementById("client-next-payment").innerText =
+  client.next_payment_date ? new Date(client.next_payment_date).toLocaleDateString("fr-FR") : "Non défini";
+
+const paymentStatusEl = document.getElementById("client-payment-status");
+paymentStatusEl.innerText = getPaymentStatusLabel(client.payment_status);
+paymentStatusEl.className = "status " + getPaymentStatusClass(client.payment_status);
+}
+
+async function loadClientInterventions() {
+  const { data: interventions, error } = await supabaseClient
+    .from("interventions")
+    .select("*")
+    .eq("user_id", clientId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    alert("Erreur interventions : " + error.message);
+    return;
+  }
+
+  document.getElementById("intervention-count").innerText = interventions.length;
+
+  const tbody = document.getElementById("interventions-history");
+  tbody.innerHTML = "";
+
+  interventions.forEach(item => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${formatDate(item.problem_date)}</td>
+      <td>${item.problem_type || "-"}</td>
+      <td>${item.description || "-"}</td>
+      <td><span class="status ${getStatusClass(item.status)}">${item.status || "en_attente"}</span></td>
+      <td>
+        <a class="btn btn-light" href="intervention-detail.html?id=${item.id}">Voir</a>
+      </td>
+    `;
+
+    tbody.appendChild(row);
+  });
+}
+
+function getNextPaymentDate() {
+  const today = new Date();
+
+  let targetYear = today.getFullYear();
+  let targetMonth = today.getMonth() + 1; // mois suivant
+
+  if (targetMonth > 11) {
+    targetMonth = 0;
+    targetYear += 1;
+  }
+
+  const lastDayOfNextMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
+  const paymentDay = Math.min(30, lastDayOfNextMonth);
+
+  const year = targetYear;
+  const month = String(targetMonth + 1).padStart(2, "0");
+  const day = String(paymentDay).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+async function updateClientStatus(newStatus) {
+  let updateData = {
+    status: newStatus
+  };
+
+  if (newStatus === "actif") {
+    updateData.activated_at = new Date().toISOString();
+    updateData.next_payment_date = getNextPaymentDate();
+    updateData.payment_status = "a_jour";
+  }
+
+  if (newStatus === "suspendu") {
+    updateData.payment_status = "en_retard";
+  }
+
+  const { error } = await supabaseClient
+    .from("profiles")
+    .update(updateData)
+    .eq("id", clientId);
+
+  if (error) {
+    alert("Erreur changement statut : " + error.message);
+    return;
+  }
+
+  alert("Statut client mis à jour.");
+  loadClient();
+}
+protectAdmin();
+async function loadClientDevices() {
+  const { data: devices, error } = await supabaseClient
+    .from("devices")
+    .select("*")
+    .eq("user_id", clientId)
+    .order("created_at", { ascending:false });
+
+  if (error) {
+    alert("Erreur appareils : " + error.message);
+    return;
+  }
+
+  const container = document.getElementById("client-devices-list");
+  container.innerHTML = "";
+
+  if (devices.length === 0) {
+    container.innerHTML = `
+      <tr>
+        <td colspan="9">Aucun appareil supplémentaire.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  devices.forEach(device => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+  <td>${device.phone_model || "-"}</td>
+  <td>${device.imei || "-"}</td>
+  <td>${device.plan || "-"}</td>
+ <td>${(device.initial_ceiling || 0).toLocaleString("fr-FR")} FCFA</td>
+<td>${(device.remaining_ceiling || 0).toLocaleString("fr-FR")} FCFA</td>
+<td>${device.next_payment_date ? new Date(device.next_payment_date).toLocaleDateString("fr-FR") : "Non défini"}</td>
+<td>${device.payment_status || "en_attente"}</td>
+  <td><span class="status ${getStatusClass(device.status)}">
+      ${device.status || "en_attente"}
+    </span>
+  </td>
+  <td>
+    <button onclick="updateDeviceStatus('${device.id}', 'actif')" class="btn btn-green">Activer</button>
+    <button onclick="updateDeviceStatus('${device.id}', 'suspendu')" class="btn btn-red">Suspendre</button>
+    <button onclick="updateDeviceStatus('${device.id}', 'refuse')" class="btn btn-light">Refuser</button>
+  </td>
+`;
+
+    container.appendChild(row);
+  });
+}
+async function updateDeviceStatus(deviceId, newStatus) {
+  let updateData = {
+    status: newStatus
+  };
+
+  if (newStatus === "actif") {
+    updateData.activated_at = new Date().toISOString();
+    updateData.next_payment_date = getNextPaymentDate();
+    updateData.payment_status = "a_jour";
+  }
+
+  if (newStatus === "suspendu") {
+    updateData.payment_status = "en_retard";
+  }
+
+  const { error } = await supabaseClient
+    .from("devices")
+    .update(updateData)
+    .eq("id", deviceId);
+
+  if (error) {
+    alert("Erreur statut appareil : " + error.message);
+    return;
+  }
+
+  alert("Statut appareil mis à jour.");
+  loadClientDevices();
+}
+function getPaymentStatusClass(status) {
+  if (status === "a_jour") return "active";
+  if (status === "premier_paiement_recu") return "active";
+  if (status === "en_retard") return "suspended";
+  return "pending";
+}
+
+function getPaymentStatusLabel(status) {
+  if (status === "a_jour") return "À jour";
+  if (status === "premier_paiement_recu") return "Premier paiement reçu";
+  if (status === "en_retard") return "En retard";
+  if (status === "en_attente") return "En attente";
+  return status || "En attente";
+}
+
+let clientPaymentsData = [];
+
+function formatMoney(amount) {
+  return Number(amount || 0).toLocaleString("fr-FR") + " FCFA";
+}
+
+function formatDateTime(dateValue) {
+  if (!dateValue) return "-";
+  return new Date(dateValue).toLocaleString("fr-FR");
+}
+
+function getInvoiceTypeLabel(type) {
+  if (type === "activation") return "Activation";
+  if (type === "subscription") return "Mensuelle";
+  if (type === "advance") return "Paiement avance";
+  return type || "-";
+}
+
+async function loadClientPayments() {
+  const { data: payments, error } = await supabaseClient
+    .from("invoices")
+    .select("*")
+    .eq("user_id", clientId)
+    .eq("status", "paid")
+    .order("paid_at", { ascending: false });
+
+  if (error) {
+    alert("Erreur historique paiements : " + error.message);
+    return;
+  }
+
+  clientPaymentsData = payments || [];
+  displayClientPayments();
+}
+
+function displayClientPayments() {
+  const startDate = document.getElementById("payment-start-date").value;
+  const endDate = document.getElementById("payment-end-date").value;
+
+  let filtered = [...clientPaymentsData];
+
+  if (startDate) {
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+
+    filtered = filtered.filter(payment => {
+      if (!payment.paid_at) return false;
+      return new Date(payment.paid_at) >= start;
+    });
+  }
+
+  if (endDate) {
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    filtered = filtered.filter(payment => {
+      if (!payment.paid_at) return false;
+      return new Date(payment.paid_at) <= end;
+    });
+  }
+
+  const container = document.getElementById("client-payments-history");
+  container.innerHTML = "";
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <tr>
+        <td colspan="8">Aucun paiement trouvé sur cette période.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  filtered.forEach(payment => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${formatDateTime(payment.paid_at)}</td>
+      <td>${payment.target_label || "-"}</td>
+      <td>${getInvoiceTypeLabel(payment.invoice_type)}</td>
+      <td>${payment.plan || "-"}</td>
+      <td>${formatDate(payment.due_date)}</td>
+      <td>${formatMoney(payment.amount)}</td>
+      <td>${formatMoney(payment.penalty_amount)}</td>
+      <td><strong>${formatMoney(payment.total_amount || payment.amount)}</strong></td>
+    `;
+
+    container.appendChild(row);
+  });
+}
+
+function resetPaymentFilters() {
+  document.getElementById("payment-start-date").value = "";
+  document.getElementById("payment-end-date").value = "";
+  displayClientPayments();
+}
+
+</script>
+
+</body>
+</html>

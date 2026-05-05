@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion | I-PROTECT</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #ffffff;
+      color: #111827;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 430px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 26px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    }
+
+    .logo-box {
+      width: 90px;
+      height: 90px;
+      border-radius: 22px;
+      background: #f3e8ff;
+      color: #6d28d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-weight: 700;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 16px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 4px rgba(124,58,237,0.12);
+    }
+
+    .forgot {
+      display: block;
+      text-align: right;
+      color: #7c3aed;
+      font-size: 14px;
+      margin-bottom: 20px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 18px;
+      background: #7c3aed;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .btn:hover {
+      background: #6d28d9;
+      transform: translateY(-1px);
+    }
+
+    .bottom-text {
+      text-align: center;
+      margin-top: 24px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .bottom-text a {
+      color: #7c3aed;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .note {
+      margin-top: 22px;
+      background: #f9fafb;
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 13px;
+      color: #6b7280;
+      text-align: center;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="auth-container">
+
+    <div class="logo-box">
+  <img src="logo.png" style="width:70px;">
+</div>
+
+    <h1>Connexion</h1>
+    <p class="subtitle">Accédez à votre espace I-PROTECT</p>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label>Email ou téléphone</label>
+        <input type="email" id="email" placeholder="Votre email" required>
+      </div>
+
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="password" placeholder="Mot de passe" required>
+      </div>
+
+      <a href="mot-de-passe-oublie.html" class="forgot">Mot de passe oublié ?</a>
+
+      <button class="btn" type="submit">Se connecter</button>
+    </form>
+
+    <p class="bottom-text">
+      Pas encore inscrit ?
+      <a href="inscription.html">Créer un compte</a>
+    </p>
+
+    <div class="note">
+      I-PROTECT est un service d’assistance et de réparation téléphone par abonnement.  
+      Ce service n’est pas une assurance.
+    </div>
+
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://tzwltqnkolkgemdhiimp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6d2x0cW5rb2xrZ2VtZGhpaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMzk3MDIsImV4cCI6MjA5MjkxNTcwMn0.9_xIrz6030zEoGFhD6iPN3cq6Z8_aZsDuLVipeY5D0o";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+console.log("Email:", email);
+console.log("Tentative de connexion...");
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    alert("Erreur : " + error.message);
+    return;
+  }
+
+ const userId = data.user.id;
+
+const { data: profile, error: profileError } = await supabaseClient
+  .from("profiles")
+  .select("role")
+  .eq("id", userId)
+  .single();
+
+if (profileError) {
+  alert("Erreur profil : " + profileError.message);
+  return;
+}
+
+if (profile.role === "admin") {
+  window.location.href = "./dashboard-admin.html";
+} else {
+  window.location.href = "./dashboard-client.html";
+}
+});
+</script>
+</body>
+</html>

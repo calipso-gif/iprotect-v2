@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facture intervention | I-PROTECT</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#f9fafb;
+  color:#111827;
+  padding:25px;
+}
+
+.top-actions{
+  max-width:850px;
+  margin:0 auto 20px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:13px 18px;
+  border:none;
+  border-radius:14px;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.btn-purple{
+  background:#7c3aed;
+  color:white;
+}
+
+.btn-light{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+.invoice{
+  max-width:850px;
+  margin:auto;
+  background:white;
+  border-radius:24px;
+  padding:35px;
+  box-shadow:0 15px 45px rgba(0,0,0,0.08);
+}
+
+.invoice-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  border-bottom:2px solid #e5e7eb;
+  padding-bottom:22px;
+  margin-bottom:28px;
+  gap:20px;
+}
+
+.brand{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+
+.logo-box{
+  width:60px;
+  height:60px;
+  border-radius:18px;
+  background:#f3e8ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.logo-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.brand h1{
+  color:#7c3aed;
+  font-size:28px;
+  margin-bottom:4px;
+}
+
+.brand p{
+  color:#6b7280;
+  font-size:13px;
+}
+
+.invoice-meta{
+  text-align:right;
+  color:#374151;
+  line-height:1.7;
+}
+
+.invoice-meta strong{
+  color:#111827;
+}
+
+.section{
+  margin-bottom:28px;
+}
+
+.section h2{
+  font-size:19px;
+  margin-bottom:14px;
+  color:#111827;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+  gap:14px;
+}
+
+.box{
+  background:#f9fafb;
+  border:1px solid #e5e7eb;
+  border-radius:16px;
+  padding:15px;
+}
+
+.box small{
+  display:block;
+  color:#6b7280;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.box strong{
+  font-size:15px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  overflow:hidden;
+  border-radius:16px;
+}
+
+th, td{
+  padding:15px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+}
+
+th{
+  background:#f9fafb;
+  color:#6b7280;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+
+.amount{
+  font-weight:800;
+}
+
+.total-box{
+  margin-top:22px;
+  background:#f3e8ff;
+  color:#4c1d95;
+  border-radius:18px;
+  padding:20px;
+}
+
+.total-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  font-weight:800;
+  font-size:17px;
+}
+
+.total-line .important{
+  color:#dc2626;
+  font-size:22px;
+}
+
+.note{
+  margin-top:28px;
+  color:#6b7280;
+  font-size:13px;
+  line-height:1.6;
+  border-top:1px solid #e5e7eb;
+  padding-top:18px;
+}
+
+.status{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.active{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.pending{
+  background:#fef3c7;
+  color:#92400e;
+}
+
+.suspended{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.loading{
+  max-width:850px;
+  margin:40px auto;
+  background:white;
+  padding:25px;
+  border-radius:20px;
+  text-align:center;
+  color:#6b7280;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+@media(max-width:700px){
+  body{
+    padding:15px;
+  }
+
+  .invoice{
+    padding:22px;
+  }
+
+  .invoice-header{
+    flex-direction:column;
+  }
+
+  .invoice-meta{
+    text-align:left;
+  }
+
+  .total-line{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}
+
+@media print{
+  body{
+    background:white;
+    padding:0;
+  }
+
+  .top-actions{
+    display:none;
+  }
+
+  .invoice{
+    box-shadow:none;
+    border-radius:0;
+    max-width:100%;
+  }
+
+  .loading{
+    display:none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-actions">
+  <a href="dashboard-admin.html" class="btn btn-light">← Retour admin</a>
+  <button onclick="window.print()" class="btn btn-purple">Télécharger / Imprimer PDF</button>
+</div>
+
+<div id="loading" class="loading">
+  Chargement de la facture...
+</div>
+
+<div class="invoice" id="invoice" style="display:none;">
+
+  <div class="invoice-header">
+    <div class="brand">
+      <div class="logo-box">
+        <img src="logo.png" alt="Logo I-PROTECT">
+      </div>
+
+      <div>
+        <h1>I-PROTECT</h1>
+        <p>Service d’assistance et de réparation téléphone</p>
+      </div>
+    </div>
+
+    <div class="invoice-meta">
+      <strong>Facture intervention</strong><br>
+      N° <span id="invoice-number">...</span><br>
+      Date : <span id="invoice-date">...</span><br>
+      Statut : <span id="invoice-status" class="status active">...</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Client</h2>
+
+    <div class="grid">
+      <div class="box">
+        <small>Nom complet</small>
+        <strong id="client-name">...</strong>
+      </div>
+
+      <div class="box">
+        <small>Téléphone</small>
+        <strong id="client-phone">...</strong>
+      </div>
+
+      <div class="box">
+        <small>Email</small>
+        <strong id="client-email">...</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Appareil concerné</h2>
+
+    <div class="grid">
+      <div class="box">
+        <small>Modèle</small>
+        <strong id="device-model">...</strong>
+      </div>
+
+      <div class="box">
+        <small>IMEI</small>
+        <strong id="device-imei">...</strong>
+      </div>
+
+      <div class="box">
+        <small>Formule</small>
+        <strong id="device-plan">...</strong>
+      </div>
+
+      <div class="box">
+        <small>Problème déclaré</small>
+        <strong id="problem-type">...</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Détail financier</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Désignation</th>
+          <th>Montant</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Coût total de l’intervention</td>
+          <td class="amount" id="repair-cost">...</td>
+        </tr>
+
+        <tr>
+          <td>Pris en charge par I-PROTECT</td>
+          <td class="amount" id="iprotect-coverage">...</td>
+        </tr>
+
+        <tr>
+          <td>Reliquat à payer par le client</td>
+          <td class="amount" id="client-remainder">...</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="total-box">
+      <div class="total-line">
+        <span>Montant à payer par le client</span>
+        <span class="important" id="amount-to-pay">...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Description de l’intervention</h2>
+
+    <div class="box">
+      <small>Description</small>
+      <strong id="description">...</strong>
+    </div>
+  </div>
+
+  <div class="note">
+    Cette facture concerne une intervention réalisée dans le cadre du service I-PROTECT.
+    I-PROTECT est un service d’assistance et de réparation téléphone par abonnement.
+    Ce service n’est pas une assurance. Le reliquat correspond à la partie du coût non couverte par le plafond restant disponible.
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://tzwltqnkolkgemdhiimp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6d2x0cW5rb2xrZ2VtZGhpaW1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMzk3MDIsImV4cCI6MjA5MjkxNTcwMn0.9_xIrz6030zEoGFhD6iPN3cq6Z8_aZsDuLVipeY5D0o";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const params = new URLSearchParams(window.location.search);
+const interventionId = params.get("id");
+
+function formatMoney(amount) {
+  return Number(amount || 0).toLocaleString("fr-FR") + " FCFA";
+}
+
+function formatDate(dateValue) {
+  if (!dateValue) return "-";
+  return new Date(dateValue).toLocaleDateString("fr-FR");
+}
+
+function getStatusClass(status) {
+  if (status === "termine") return "active";
+  if (status === "refuse") return "suspended";
+  return "pending";
+}
+
+async function protectAdmin() {
+  const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+  if (userError || !user) {
+    alert("Session admin introuvable. Reconnecte-toi.");
+    window.location.href = "connexion.html";
+    return;
+  }
+
+  const { data: profile, error: profileError } = await supabaseClient
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError || !profile) {
+    alert("Erreur profil admin : " + profileError.message);
+    return;
+  }
+
+  if (profile.role !== "admin") {
+    alert("Accès réservé à l’administrateur.");
+    window.location.href = "dashboard-client.html";
+    return;
+  }
+
+  loadInvoice();
+}
+
+async function loadInvoice() {
+  if (!interventionId) {
+    alert("Facture introuvable. Aucun ID intervention.");
+    window.location.href = "dashboard-admin.html";
+    return;
+  }
+
+  const { data: intervention, error: interventionError } = await supabaseClient
+    .from("interventions")
+    .select("*")
+    .eq("id", interventionId)
+    .single();
+
+  if (interventionError || !intervention) {
+    alert("Erreur chargement intervention : " + interventionError.message);
+    return;
+  }
+
+  if (intervention.status !== "termine") {
+    alert("La facture est disponible uniquement après avoir marqué l’intervention comme terminée.");
+    window.location.href = "intervention-detail.html?id=" + interventionId;
+    return;
+  }
+
+  const { data: client, error: clientError } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", intervention.user_id)
+    .single();
+
+  if (clientError || !client) {
+    alert("Erreur chargement client : " + clientError.message);
+    return;
+  }
+
+  let deviceModel = client.phone_model || "-";
+  let deviceImei = client.imei || "-";
+  let devicePlan = client.plan || "-";
+
+  if (intervention.device_id) {
+    const { data: device, error: deviceError } = await supabaseClient
+      .from("devices")
+      .select("*")
+      .eq("id", intervention.device_id)
+      .single();
+
+    if (!deviceError && device) {
+      deviceModel = device.phone_model || "-";
+      deviceImei = device.imei || "-";
+      devicePlan = device.plan || "-";
+    }
+  }
+
+  const repairCost = Number(intervention.repair_cost || 0);
+  const clientRemainder = Number(intervention.client_remainder || 0);
+  const iprotectCoverage = Math.max(repairCost - clientRemainder, 0);
+
+  const invoiceNumber = "IP-" + intervention.id.slice(0, 8).toUpperCase();
+
+  document.getElementById("invoice-number").innerText = invoiceNumber;
+  document.getElementById("invoice-date").innerText = formatDate(intervention.processed_at || intervention.created_at);
+
+  const statusEl = document.getElementById("invoice-status");
+  statusEl.innerText = intervention.status || "-";
+  statusEl.className = "status " + getStatusClass(intervention.status);
+
+  document.getElementById("client-name").innerText = client.full_name || "-";
+  document.getElementById("client-phone").innerText = client.phone || "-";
+  document.getElementById("client-email").innerText = client.email || "-";
+
+  document.getElementById("device-model").innerText = deviceModel;
+  document.getElementById("device-imei").innerText = deviceImei;
+  document.getElementById("device-plan").innerText = devicePlan;
+  document.getElementById("problem-type").innerText = intervention.problem_type || "-";
+
+  document.getElementById("repair-cost").innerText = formatMoney(repairCost);
+  document.getElementById("iprotect-coverage").innerText = formatMoney(iprotectCoverage);
+  document.getElementById("client-remainder").innerText = formatMoney(clientRemainder);
+  document.getElementById("amount-to-pay").innerText = formatMoney(clientRemainder);
+
+  document.getElementById("description").innerText = intervention.description || "-";
+
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("invoice").style.display = "block";
+}
+
+protectAdmin();
+</script>
+
+</body>
+</html>
