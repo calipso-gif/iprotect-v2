@@ -159,11 +159,44 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+async function initPasswordRecoveryPage() {
+  const hashParams = new URLSearchParams(window.location.hash.substring(1));
+  const accessToken = hashParams.get("access_token");
+  const refreshToken = hashParams.get("refresh_token");
+
+  if (accessToken && refreshToken) {
+    const { error } = await supabaseClient.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken
+    });
+
+    if (error) {
+      alert("Lien invalide ou expiré. Merci de refaire une demande.");
+      window.location.href = "https://iprotect-ci.vercel.app/mot-de-passe-oublie.html";
+      return;
+    }
+  }
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  if (!session) {
+    alert("Session de réinitialisation introuvable. Merci de refaire une demande.");
+    window.location.href = "https://iprotect-ci.vercel.app/mot-de-passe-oublie.html";
+  }
+}
+
+initPasswordRecoveryPage();
+
 document.querySelector("form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirm-password").value;
+
+  if (password.length < 6) {
+    alert("Le mot de passe doit contenir au moins 6 caractères.");
+    return;
+  }
 
   if (password !== confirmPassword) {
     alert("Les mots de passe ne correspondent pas.");
@@ -180,6 +213,9 @@ document.querySelector("form").addEventListener("submit", async (e) => {
   }
 
   alert("Mot de passe modifié avec succès.");
+
+  await supabaseClient.auth.signOut();
+
   window.location.href = "https://iprotect-ci.vercel.app/connexion.html";
 });
 </script>
