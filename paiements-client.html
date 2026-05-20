@@ -1037,14 +1037,35 @@ async function payInvoice(invoiceId) {
 
   if (!confirmation) return;
 
-  const { error } = await supabaseClient.rpc("mark_invoice_paid", {
-    p_invoice_id: invoiceId
-  });
+  const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
 
-  if (error) {
-    alert("Erreur paiement : " + error.message);
+  if (sessionError || !session) {
+    alert("Session expirée. Merci de vous reconnecter.");
+    window.location.href = "connexion.html";
     return;
   }
+
+  const response = await fetch("/api/create-payment", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + session.access_token
+    },
+    body: JSON.stringify({
+      invoiceId: invoiceId
+    })
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    alert(result.message || "Erreur création paiement.");
+    console.error(result);
+    return;
+  }
+
+  window.location.href = result.payment_url;
+}
 
   alert("Paiement enregistré avec succès.");
 
