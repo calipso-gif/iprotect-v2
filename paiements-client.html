@@ -1066,20 +1066,7 @@ async function payInvoice(invoiceId) {
 
   window.location.href = result.payment_url;
 }
-
-  alert("Paiement enregistré avec succès.");
-
-await refreshPaymentStatuses();
-await loadProfile();
-await loadDevices();
-await ensureInvoices();
-await loadInvoices();
-
-displayInvoices();
-displayAdvancePayments();
-}
-
-function getTargetsForAdvance() {
+  function getTargetsForAdvance() {
   const targets = [];
 
   if (currentProfile && currentProfile.status !== "resilie") {
