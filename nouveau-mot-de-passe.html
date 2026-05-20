@@ -162,7 +162,13 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 document.querySelector("form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const password = document.querySelectorAll('input[type="password"]')[0].value;
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirm-password").value;
+
+  if (password !== confirmPassword) {
+    alert("Les mots de passe ne correspondent pas.");
+    return;
+  }
 
   const { error } = await supabaseClient.auth.updateUser({
     password: password
@@ -173,9 +179,7 @@ document.querySelector("form").addEventListener("submit", async (e) => {
     return;
   }
 
-  alert("Mot de passe mis à jour !");
-  window.location.href = "connexion.html";
+  alert("Mot de passe modifié avec succès.");
+  window.location.href = "https://iprotect-ci.vercel.app/connexion.html";
 });
 </script>
-</body>
-</html>
