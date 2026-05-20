@@ -156,10 +156,10 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 document.querySelector("form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const email = document.querySelector('input[type="email"]').value;
+  const email = document.querySelector('input[type="email"]').value.trim();
 
   const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-    redirectTo: "nouveau-mot-de-passe"
+    redirectTo: "https://iprotect-ci.vercel.app/nouveau-mot-de-passe.html"
   });
 
   if (error) {
