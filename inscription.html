@@ -203,8 +203,6 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 document.getElementById("signup-form").addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  alert("Bouton cliqué, inscription en cours...");
-
   const full_name = document.getElementById("full_name").value.trim();
   const phone = document.getElementById("phone").value.trim();
   const email = document.getElementById("email").value.trim();
@@ -229,15 +227,14 @@ document.getElementById("signup-form").addEventListener("submit", async function
     return;
   }
 
-  alert("Compte Auth créé");
-
   const user = data.user;
 
-if (!user) {
-  alert("Compte créé. Vérifie ton email pour activer ton compte.");
-  window.location.href = "connexion.html";
-  return;
-}
+  if (!user) {
+    alert("Compte créé. Vérifie ton email pour activer ton compte.");
+    window.location.href = "connexion.html";
+    return;
+  }
+
   const { error: profileError } = await supabaseClient
     .from("profiles")
     .insert({
@@ -249,10 +246,10 @@ if (!user) {
       imei: imei,
       plan: plan,
       role: "client",
-status: "en_attente",
-current_ceiling: plafond,
-initial_ceiling: plafond,
-remaining_ceiling: plafond
+      status: "en_attente",
+      current_ceiling: plafond,
+      initial_ceiling: plafond,
+      remaining_ceiling: plafond
     });
 
   if (profileError) {
