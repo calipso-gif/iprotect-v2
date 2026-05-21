@@ -908,9 +908,10 @@ async function ensureInvoices() {
     // Facture normale appareil secondaire
     // Seulement après activation admin
     if (
-      deviceStatus === "actif" &&
-      device.next_payment_date
-    ) {
+  deviceStatus === "actif" &&
+  device.next_payment_date &&
+  canCreateMonthlyInvoice(device.next_payment_date)
+) {
       await createInvoice({
         target_type: "device",
         device_id: device.id,
