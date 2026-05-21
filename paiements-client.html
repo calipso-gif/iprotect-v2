@@ -805,6 +805,26 @@ invoice_type: target.invoice_type || "subscription"
   }
 }
 
+function canCreateMonthlyInvoice(nextPaymentDate) {
+  if (!nextPaymentDate) return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const dueDate = new Date(nextPaymentDate);
+  dueDate.setHours(0, 0, 0, 0);
+
+  const invoiceOpeningDate = new Date(
+    dueDate.getFullYear(),
+    dueDate.getMonth(),
+    20
+  );
+
+  invoiceOpeningDate.setHours(0, 0, 0, 0);
+
+  return today >= invoiceOpeningDate;
+}
+
 async function ensureInvoices() {
   const profileStatus = cleanValue(currentProfile?.status);
 
