@@ -860,10 +860,11 @@ async function ensureInvoices() {
   // Seulement après activation admin
   // =========================
   if (
-    currentProfile &&
-    profileStatus === "actif" &&
-    currentProfile.next_payment_date
-  ) {
+  currentProfile &&
+  profileStatus === "actif" &&
+  currentProfile.next_payment_date &&
+  canCreateMonthlyInvoice(currentProfile.next_payment_date)
+) {
     await createInvoice({
       target_type: "profile",
       device_id: null,
