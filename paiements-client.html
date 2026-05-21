@@ -536,20 +536,6 @@ td strong{
   <section class="panel">
     <div class="panel-header">
       <div>
-        <h2>Paiement à l’avance</h2>
-        <p class="panel-subtitle">
-          Payez une échéance future pour garder votre abonnement à jour plus longtemps.
-          Si une facture en retard existe, elle doit être réglée en priorité.
-        </p>
-      </div>
-    </div>
-
-    <div id="advance-payments-list" class="advance-grid"></div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-header">
-      <div>
         <h2>Historique des paiements</h2>
         <p class="panel-subtitle">
           Retrouvez ici les paiements déjà enregistrés, avec la date et l’heure.
@@ -704,7 +690,6 @@ await ensureInvoices();
 await loadInvoices();
 
   displayInvoices();
-  displayAdvancePayments();
 }
 
 async function loadProfile() {
@@ -1218,7 +1203,6 @@ async function createAdvanceInvoice(target) {
   await loadInvoices();
 
   displayInvoices();
-  displayAdvancePayments();
 }
 async function refreshPaymentStatuses() {
   const { error } = await supabaseClient.rpc("refresh_payment_statuses");
