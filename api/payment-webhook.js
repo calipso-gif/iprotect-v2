@@ -21,23 +21,32 @@ function getHeader(req, name) {
   return Array.isArray(value) ? value[0] : value;
 }
 
-function isSuccessfulPayment(payload) {
-  const status = (
+function getStatus(payload) {
+  return (
     payload.status ||
     payload.payment_status ||
     payload.data?.status ||
     payload.data?.payment_status ||
+    payload.event ||
     ""
   ).toString().toLowerCase();
+}
 
-  return [
-    "success",
-    "successful",
-    "paid",
-    "completed",
-    "approved",
-    "succeeded"
-  ].includes(status);
+function isSuccessfulPayment(payload) {
+  const status = getStatus(payload);
+  const event = (payload.event || "").toString().toLowerCase();
+  const scenario = (payload.data?.scenario || "").toString().toLowerCase();
+
+  return (
+    status === "completed" ||
+    status === "success" ||
+    status === "successful" ||
+    status === "paid" ||
+    status === "approved" ||
+    status === "succeeded" ||
+    event === "payment.success" ||
+    scenario === "success"
+  );
 }
 
 function getProviderReference(payload) {
@@ -48,7 +57,6 @@ function getProviderReference(payload) {
     payload.data?.reference ||
     payload.data?.payment_reference ||
     payload.data?.transaction_reference ||
-    payload.data?.id ||
     null
   );
 }
@@ -60,6 +68,67 @@ function getInvoiceId(payload) {
     payload.invoice_id ||
     null
   );
+}
+
+function getTransactionId(payload) {
+  return (
+    payload.metadata?.transaction_id ||
+    payload.data?.metadata?.transaction_id ||
+    payload.transaction_id ||
+    null
+  );
+}
+
+async function supabaseFetch(path, options = {}) {
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
+
+  return fetch(`${SUPABASE_URL}${path}`, {
+    ...options,
+    headers: {
+      apikey: SUPABASE_SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      "Content-Type": "application/json",
+      ...(options.headers || {})
+    }
+  });
+}
+
+async function findTransaction(payload) {
+  const transactionId = getTransactionId(payload);
+  const providerReference = getProviderReference(payload);
+  const invoiceId = getInvoiceId(payload);
+
+  // 1. Recherche directe avec transaction_id envoyé dans metadata
+  if (transactionId) {
+    const response = await supabaseFetch(
+      `/rest/v1/payment_transactions?id=eq.${encodeURIComponent(transactionId)}&select=*`
+    );
+
+    const data = response.ok ? await response.json() : [];
+    if (data?.[0]) return data[0];
+  }
+
+  // 2. Recherche avec référence GeniusPay
+  if (providerReference) {
+    const response = await supabaseFetch(
+      `/rest/v1/payment_transactions?provider_reference=eq.${encodeURIComponent(providerReference)}&select=*`
+    );
+
+    const data = response.ok ? await response.json() : [];
+    if (data?.[0]) return data[0];
+  }
+
+  // 3. Recherche avec invoice_id si nécessaire
+  if (invoiceId) {
+    const response = await supabaseFetch(
+      `/rest/v1/payment_transactions?invoice_id=eq.${encodeURIComponent(invoiceId)}&status=eq.pending&select=*`
+    );
+
+    const data = response.ok ? await response.json() : [];
+    if (data?.[0]) return data[0];
+  }
+
+  return null;
 }
 
 export default async function handler(req, res) {
@@ -102,6 +171,13 @@ export default async function handler(req, res) {
       .update(`${timestamp}.${rawPayload}`)
       .digest("hex");
 
+    if (Buffer.from(expectedSignature).length !== Buffer.from(signature).length) {
+      return res.status(401).json({
+        success: false,
+        message: "Signature webhook invalide"
+      });
+    }
+
     const validSignature = crypto.timingSafeEqual(
       Buffer.from(expectedSignature),
       Buffer.from(signature)
@@ -117,6 +193,7 @@ export default async function handler(req, res) {
     const payload = JSON.parse(rawPayload);
 
     const eventId = payload.id || payload.event_id || payload.data?.id;
+    const providerReference = getProviderReference(payload);
 
     if (!eventId) {
       return res.status(400).json({
@@ -125,48 +202,30 @@ export default async function handler(req, res) {
       });
     }
 
-    const providerReference = getProviderReference(payload);
-    const invoiceIdFromMetadata = getInvoiceId(payload);
-
-    const eventCheckResponse = await fetch(
-      `${SUPABASE_URL}/rest/v1/payment_webhook_events?event_id=eq.${encodeURIComponent(eventId)}&select=id`,
-      {
-        method: "GET",
-        headers: {
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          "Content-Type": "application/json"
-        }
-      }
+    // Vérifier si l’événement existe déjà
+    const eventCheckResponse = await supabaseFetch(
+      `/rest/v1/payment_webhook_events?event_id=eq.${encodeURIComponent(eventId)}&select=id`
     );
 
     const existingEvents = eventCheckResponse.ok
       ? await eventCheckResponse.json()
       : [];
 
-    if (existingEvents.length > 0) {
-      return res.status(200).json({
-        success: true,
-        message: "Webhook déjà traité"
+    // On enregistre l'événement seulement s'il n'existe pas encore
+    if (existingEvents.length === 0) {
+      await supabaseFetch(`/rest/v1/payment_webhook_events`, {
+        method: "POST",
+        body: JSON.stringify({
+          provider: "geniuspay",
+          event_id: eventId,
+          event_type: eventType || payload.event || payload.type || null,
+          provider_reference: providerReference,
+          raw_payload: payload
+        })
       });
     }
 
-    await fetch(`${SUPABASE_URL}/rest/v1/payment_webhook_events`, {
-      method: "POST",
-      headers: {
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        provider: "geniuspay",
-        event_id: eventId,
-        event_type: eventType || payload.event || payload.type || null,
-        provider_reference: providerReference,
-        raw_payload: payload
-      })
-    });
-
+    // Si le paiement n'est pas confirmé, on garde juste la trace
     if (!isSuccessfulPayment(payload)) {
       return res.status(200).json({
         success: true,
@@ -174,47 +233,7 @@ export default async function handler(req, res) {
       });
     }
 
-    let transaction = null;
-
-    if (providerReference) {
-      const transactionResponse = await fetch(
-        `${SUPABASE_URL}/rest/v1/payment_transactions?provider_reference=eq.${encodeURIComponent(providerReference)}&select=*`,
-        {
-          method: "GET",
-          headers: {
-            apikey: SUPABASE_SERVICE_ROLE_KEY,
-            Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
-
-      const transactions = transactionResponse.ok
-        ? await transactionResponse.json()
-        : [];
-
-      transaction = transactions?.[0] || null;
-    }
-
-    if (!transaction && invoiceIdFromMetadata) {
-      const transactionResponse = await fetch(
-        `${SUPABASE_URL}/rest/v1/payment_transactions?invoice_id=eq.${encodeURIComponent(invoiceIdFromMetadata)}&status=eq.pending&select=*`,
-        {
-          method: "GET",
-          headers: {
-            apikey: SUPABASE_SERVICE_ROLE_KEY,
-            Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
-
-      const transactions = transactionResponse.ok
-        ? await transactionResponse.json()
-        : [];
-
-      transaction = transactions?.[0] || null;
-    }
+    const transaction = await findTransaction(payload);
 
     if (!transaction) {
       return res.status(404).json({
@@ -223,30 +242,31 @@ export default async function handler(req, res) {
       });
     }
 
-    await fetch(
-      `${SUPABASE_URL}/rest/v1/payment_transactions?id=eq.${transaction.id}`,
+    // Si déjà validée, on évite le double traitement
+    if (transaction.status === "success") {
+      return res.status(200).json({
+        success: true,
+        message: "Transaction déjà validée"
+      });
+    }
+
+    // Mettre la transaction en success
+    await supabaseFetch(
+      `/rest/v1/payment_transactions?id=eq.${transaction.id}`,
       {
         method: "PATCH",
-        headers: {
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify({
           status: "success",
+          provider_reference: providerReference || transaction.provider_reference,
           raw_response: payload,
           updated_at: new Date().toISOString()
         })
       }
     );
 
-    const rpcResponse = await fetch(`${SUPABASE_URL}/rest/v1/rpc/mark_invoice_paid`, {
+    // Marquer la facture comme payée
+    const rpcResponse = await supabaseFetch(`/rest/v1/rpc/mark_invoice_paid`, {
       method: "POST",
-      headers: {
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        "Content-Type": "application/json"
-      },
       body: JSON.stringify({
         p_invoice_id: transaction.invoice_id
       })
