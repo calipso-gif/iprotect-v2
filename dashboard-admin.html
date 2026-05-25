@@ -933,11 +933,11 @@ async function loadInterventions() {
       refuse: 4
     };
 
-    const totalResults = interventions.length;
-const visibleInterventions = interventions.slice(0, 5);
-
     return (order[a.status] || 99) - (order[b.status] || 99);
   });
+
+  const totalResults = interventions.length;
+  const visibleInterventions = interventions.slice(0, 5);
 
   for (const item of visibleInterventions) {
     const { data: profile } = await supabaseClient
@@ -992,18 +992,17 @@ const visibleInterventions = interventions.slice(0, 5);
   }
 
   if (totalResults > 5) {
-  const row = document.createElement("tr");
+    const row = document.createElement("tr");
 
-  row.innerHTML = `
-    <td colspan="7" style="text-align:center;color:#6b7280;font-size:13px;">
-      ${totalResults - 5} autre(s) intervention(s) masquée(s). Utilisez la recherche ou le filtre.
-    </td>
-  `;
+    row.innerHTML = `
+      <td colspan="7" style="text-align:center;color:#6b7280;font-size:13px;">
+        ${totalResults - 5} autre(s) intervention(s) masquée(s). Utilisez la recherche ou le filtre.
+      </td>
+    `;
 
-  container.appendChild(row);
+    container.appendChild(row);
+  }
 }
-}
-
 async function updateStatus(id, newStatus) {
   const { error } = await supabaseClient
     .from("interventions")
@@ -1376,7 +1375,7 @@ async function loadDeviceChangeRequests() {
   }
 
   const totalResults = requests.length;
-const visibleRequests = requests.slice(0, 5);
+  const visibleRequests = requests.slice(0, 5);
 
   for (const request of visibleRequests) {
     const { data: profile } = await supabaseClient
@@ -1423,18 +1422,18 @@ const visibleRequests = requests.slice(0, 5);
 
     container.appendChild(row);
   }
-}
 
   if (totalResults > 5) {
-  const row = document.createElement("tr");
+    const row = document.createElement("tr");
 
-  row.innerHTML = `
-    <td colspan="7" style="text-align:center;color:#6b7280;font-size:13px;">
-      ${totalResults - 5} autre(s) demande(s) appareil masquée(s).
-    </td>
-  `;
+    row.innerHTML = `
+      <td colspan="7" style="text-align:center;color:#6b7280;font-size:13px;">
+        ${totalResults - 5} autre(s) demande(s) appareil masquée(s).
+      </td>
+    `;
 
-  container.appendChild(row);
+    container.appendChild(row);
+  }
 }
 
 async function approveDeviceChangeRequest(requestId, deviceId, fieldName, newValue) {
