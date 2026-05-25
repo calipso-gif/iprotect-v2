@@ -933,10 +933,13 @@ async function loadInterventions() {
       refuse: 4
     };
 
+    const totalResults = interventions.length;
+const visibleInterventions = interventions.slice(0, 5);
+
     return (order[a.status] || 99) - (order[b.status] || 99);
   });
 
-  for (const item of interventions) {
+  for (const item of visibleInterventions) {
     const { data: profile } = await supabaseClient
       .from("profiles")
       .select("full_name")
@@ -987,6 +990,18 @@ async function loadInterventions() {
 
     container.appendChild(row);
   }
+
+  if (totalResults > 5) {
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td colspan="7" style="text-align:center;color:#6b7280;font-size:13px;">
+      ${totalResults - 5} autre(s) intervention(s) masquée(s). Utilisez la recherche ou le filtre.
+    </td>
+  `;
+
+  container.appendChild(row);
+}
 }
 
 async function updateStatus(id, newStatus) {
@@ -1150,12 +1165,14 @@ function displayAllClients() {
   );
 
   if (status !== "all") {
-    filtered = filtered.filter(client => client.status === status);
-  }
+  filtered = filtered.filter(client => client.status === status);
+}
 
-  const container = document.getElementById("all-clients-list");
-  container.innerHTML = "";
+const totalResults = filtered.length;
+filtered = filtered.slice(0, 5);
 
+const container = document.getElementById("all-clients-list");
+container.innerHTML = "";
   filtered.forEach(client => {
     const row = document.createElement("tr");
 
@@ -1174,6 +1191,17 @@ function displayAllClients() {
 
     container.appendChild(row);
   });
+  if (totalResults > 5) {
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td colspan="6" style="text-align:center;color:#6b7280;font-size:13px;">
+      ${totalResults - 5} autre(s) client(s) masqué(s). Utilisez la recherche ou le filtre de statut.
+    </td>
+  `;
+
+  container.appendChild(row);
+}
 }
 
 /* =========================
@@ -1203,7 +1231,10 @@ async function loadChangeRequests() {
     return;
   }
 
-  for (const request of requests) {
+  const totalResults = requests.length;
+const visibleRequests = requests.slice(0, 5);
+
+  for (const request of visibleRequests) {
     const { data: profile } = await supabaseClient
       .from("profiles")
       .select("full_name")
@@ -1241,6 +1272,19 @@ async function loadChangeRequests() {
 
     container.appendChild(row);
   }
+
+  if (totalResults > 5) {
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td colspan="6" style="text-align:center;color:#6b7280;font-size:13px;">
+      ${totalResults - 5} autre(s) demande(s) masquée(s).
+    </td>
+  `;
+
+  container.appendChild(row);
+}
+  
 }
 
 async function approveChangeRequest(requestId, userId, fieldName, newValue) {
@@ -1331,7 +1375,10 @@ async function loadDeviceChangeRequests() {
     return;
   }
 
-  for (const request of requests) {
+  const totalResults = requests.length;
+const visibleRequests = requests.slice(0, 5);
+
+  for (const request of visibleRequests) {
     const { data: profile } = await supabaseClient
       .from("profiles")
       .select("full_name")
@@ -1376,6 +1423,18 @@ async function loadDeviceChangeRequests() {
 
     container.appendChild(row);
   }
+}
+
+  if (totalResults > 5) {
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td colspan="7" style="text-align:center;color:#6b7280;font-size:13px;">
+      ${totalResults - 5} autre(s) demande(s) appareil masquée(s).
+    </td>
+  `;
+
+  container.appendChild(row);
 }
 
 async function approveDeviceChangeRequest(requestId, deviceId, fieldName, newValue) {
@@ -1582,7 +1641,10 @@ async function displayPerformanceInterventions(interventions) {
     return;
   }
 
-  for (const item of interventions) {
+  const totalResults = interventions.length;
+const visibleInterventions = interventions.slice(0, 5);
+
+  for (const item of visibleInterventions) {
     const { data: profile } = await supabaseClient
       .from("profiles")
       .select("full_name")
@@ -1612,6 +1674,18 @@ async function displayPerformanceInterventions(interventions) {
 
     container.appendChild(row);
   }
+
+  if (totalResults > 5) {
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td colspan="8" style="text-align:center;color:#6b7280;font-size:13px;">
+      ${totalResults - 5} autre(s) intervention(s) masquée(s). Utilisez le filtre de période.
+    </td>
+  `;
+
+  container.appendChild(row);
+}
 }
 
 /* =========================
