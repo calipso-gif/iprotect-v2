@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conditions & Règlement | I-PROTECT</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#f9fafb;
+  color:#111827;
+  line-height:1.6;
+}
+
+.header{
+  background:white;
+  padding:15px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-box{
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  background:#f3e8ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.logo-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.btn{
+  padding:12px 16px;
+  border:none;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.btn-light{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+.container{
+  max-width:950px;
+  margin:auto;
+  padding:30px 20px;
+}
+
+.hero{
+  background:linear-gradient(135deg,#7c3aed,#4c1d95);
+  color:white;
+  padding:32px;
+  border-radius:28px;
+  margin-bottom:24px;
+  box-shadow:0 22px 55px rgba(124,58,237,0.25);
+}
+
+.hero h1{
+  font-size:32px;
+  margin-bottom:10px;
+}
+
+.hero p{
+  opacity:0.92;
+}
+
+.panel{
+  background:white;
+  border-radius:24px;
+  padding:26px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  margin-bottom:20px;
+  border:1px solid #f1f1f1;
+}
+
+.panel h2{
+  font-size:21px;
+  margin-bottom:12px;
+  color:#111827;
+}
+
+.panel p{
+  margin-bottom:10px;
+  color:#374151;
+}
+
+.panel ul{
+  padding-left:20px;
+  margin-top:8px;
+}
+
+.panel li{
+  margin-bottom:8px;
+  color:#374151;
+}
+
+.warning{
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  padding:16px;
+  border-radius:18px;
+  margin-bottom:20px;
+  font-weight:700;
+}
+
+.footer{
+  text-align:center;
+  color:#6b7280;
+  font-size:13px;
+  margin-top:25px;
+}
+
+.footer a{
+  color:#6d28d9;
+  font-weight:800;
+  text-decoration:none;
+}
+
+@media(max-width:700px){
+  .header{
+    padding:14px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  .header .btn{
+    width:100%;
+  }
+
+  .container{
+    padding:18px 14px;
+  }
+
+  .hero{
+    padding:24px;
+    border-radius:22px;
+  }
+
+  .hero h1{
+    font-size:25px;
+  }
+
+  .panel{
+    padding:20px;
+    border-radius:20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-box">
+      <img src="logo.png" alt="Logo I-PROTECT">
+    </div>
+    <div>
+      <strong>I-PROTECT</strong><br>
+      <small>Conditions & règlement</small>
+    </div>
+  </div>
+
+  <a href="index.html" class="btn btn-light">← Retour à l’accueil</a>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <h1>Conditions & règlement I-PROTECT</h1>
+    <p>
+      Ce règlement précise les conditions d’utilisation du service I-PROTECT,
+      les règles de paiement, d’activation, de prise en charge et d’intervention.
+    </p>
+  </section>
+
+  <div class="warning">
+    I-PROTECT est un service d’assistance, de suivi et de prise en charge partielle de réparation téléphone par abonnement. Ce service n’est pas une assurance.
+  </div>
+
+  <section class="panel">
+    <h2>1. Nature du service</h2>
+    <p>
+      I-PROTECT propose un service d’assistance et de réparation téléphone par abonnement.
+      Le service permet au client de bénéficier d’une prise en charge dans la limite du plafond prévu par sa formule.
+    </p>
+    <p>
+      I-PROTECT ne remplace pas une assurance classique et ne garantit pas une couverture totale de tous les dommages.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>2. Activation du compte</h2>
+    <ul>
+      <li>Après inscription, une facture d’activation est générée immédiatement.</li>
+      <li>Le paiement de cette facture ne rend pas automatiquement le compte actif.</li>
+      <li>L’activation est effectuée manuellement par l’administration après vérification du téléphone et validation du premier paiement.</li>
+      <li>I-PROTECT peut refuser l’activation si l’appareil ne respecte pas les conditions de prise en charge.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>3. Formules et plafonds</h2>
+    <ul>
+      <li>Starter : plafond de prise en charge selon la formule affichée lors de l’inscription.</li>
+      <li>Plus : plafond de prise en charge selon la formule affichée lors de l’inscription.</li>
+      <li>Elite : plafond de prise en charge selon la formule affichée lors de l’inscription.</li>
+      <li>Le plafond représente le montant maximum que I-PROTECT peut prendre en charge sur une période donnée.</li>
+      <li>Si le coût de réparation dépasse le plafond restant, le reliquat est à la charge du client.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>4. Paiements mensuels</h2>
+    <ul>
+      <li>Le cycle de paiement est fixé au 30 de chaque mois.</li>
+      <li>Les factures mensuelles deviennent disponibles au paiement à partir du 20 du mois concerné.</li>
+      <li>Le paiement se fait via le moyen de paiement sécurisé proposé sur la plateforme.</li>
+      <li>Une facture est considérée comme réglée uniquement après confirmation effective du paiement.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>5. Retards, pénalités et suspension</h2>
+    <ul>
+      <li>Un délai de grâce de 15 jours est accordé après l’échéance.</li>
+      <li>Après ce délai, une pénalité de 100 FCFA par jour de retard peut être appliquée aux factures mensuelles.</li>
+      <li>Les pénalités ne s’appliquent pas aux factures d’activation.</li>
+      <li>Un compte ou un appareil peut être suspendu en cas de retard prolongé.</li>
+      <li>Un client suspendu peut perdre temporairement l’accès aux avantages du service jusqu’à régularisation.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>6. Interventions et réparations</h2>
+    <ul>
+      <li>Le client doit déclarer le problème depuis son espace client.</li>
+      <li>L’appareil peut être demandé pour diagnostic avant validation de la prise en charge.</li>
+      <li>I-PROTECT prend en charge la réparation dans la limite du plafond disponible.</li>
+      <li>Les dommages non conformes aux règles internes peuvent être refusés.</li>
+      <li>Le client reste responsable des informations fournies lors de la déclaration.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>7. Appareils supplémentaires</h2>
+    <ul>
+      <li>Le client peut ajouter un ou plusieurs appareils supplémentaires selon les conditions proposées.</li>
+      <li>Chaque appareil dispose de son propre statut, plafond, échéance et historique.</li>
+      <li>L’activation d’un appareil supplémentaire reste soumise à vérification.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>8. Résiliation et suspension définitive</h2>
+    <ul>
+      <li>I-PROTECT peut suspendre ou résilier un compte en cas de fraude, fausse déclaration, abus ou non-paiement répété.</li>
+      <li>Le client peut demander l’arrêt du service selon les modalités communiquées par l’administration.</li>
+      <li>Les paiements déjà effectués ne sont pas automatiquement remboursables.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>9. Acceptation</h2>
+    <p>
+      En utilisant I-PROTECT, le client reconnaît avoir lu, compris et accepté les présentes conditions.
+      Ces conditions peuvent être mises à jour afin d’améliorer le service ou de respecter les obligations opérationnelles.
+    </p>
+  </section>
+
+  <div class="footer">
+    © I-PROTECT — <a href="index.html">Retour accueil</a>
+  </div>
+
+</main>
+
+</body>
+</html>
