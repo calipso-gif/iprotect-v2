@@ -1018,34 +1018,77 @@ async function payInvoice(invoiceId) {
 
   if (!confirmation) return;
 
-  const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach(btn => btn.disabled = true);
 
-  if (sessionError || !session) {
-    alert("Session expirée. Merci de vous reconnecter.");
-    window.location.href = "connexion.html";
-    return;
+  try {
+    const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+
+    if (sessionError || !session) {
+      alert("Session expirée. Merci de vous reconnecter.");
+      window.location.href = "connexion.html";
+      return;
+    }
+
+    const response = await fetch("/api/create-payment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + session.access_token
+      },
+      body: JSON.stringify({
+        invoiceId: invoiceId
+      })
+    });
+
+    const result = await response.json().catch(() => ({
+      success: false,
+      message: "Réponse invalide du serveur de paiement."
+    }));
+
+    if (!response.ok || !result.success) {
+      console.error("Erreur paiement :", result);
+
+      const detailsText = JSON.stringify(result.details || result || {}).toLowerCase();
+
+      let message = result.message || "Erreur création paiement.";
+
+      if (
+        response.status >= 500 ||
+        detailsText.includes("500") ||
+        detailsText.includes("server") ||
+        detailsText.includes("incident") ||
+        detailsText.includes("gateway") ||
+        detailsText.includes("paiement")
+      ) {
+        message =
+          "Le service de paiement GeniusPay semble momentanément indisponible. " +
+          "Veuillez réessayer dans quelques minutes. Vos données sont sécurisées.";
+      }
+
+      alert(message);
+      buttons.forEach(btn => btn.disabled = false);
+      return;
+    }
+
+    if (!result.payment_url) {
+      alert("Lien de paiement introuvable. Merci de réessayer dans quelques minutes.");
+      buttons.forEach(btn => btn.disabled = false);
+      return;
+    }
+
+    window.location.href = result.payment_url;
+
+  } catch (error) {
+    console.error("Erreur paiement :", error);
+
+    alert(
+      "Impossible de lancer le paiement pour le moment. " +
+      "Veuillez vérifier votre connexion ou réessayer dans quelques minutes."
+    );
+
+    buttons.forEach(btn => btn.disabled = false);
   }
-
-  const response = await fetch("/api/create-payment", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + session.access_token
-    },
-    body: JSON.stringify({
-      invoiceId: invoiceId
-    })
-  });
-
-  const result = await response.json();
-
-  if (!response.ok || !result.success) {
-    alert(result.message || "Erreur création paiement.");
-    console.error(result);
-    return;
-  }
-
-  window.location.href = result.payment_url;
 }
  
 async function refreshPaymentStatuses() {
