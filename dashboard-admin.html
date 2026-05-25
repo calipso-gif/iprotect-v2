@@ -297,6 +297,124 @@ th{
   }
 }
 
+@media(max-width:760px){
+  .header{
+    padding:14px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  .admin-badge{
+    width:100%;
+    text-align:center;
+  }
+
+  .container{
+    padding:15px;
+  }
+
+  .page-title h1{
+    font-size:25px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .panel{
+    padding:18px;
+    border-radius:20px;
+  }
+
+  .filters{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .filters input,
+  .filters select,
+  .filters button{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+  }
+
+  .table-wrap{
+    overflow:visible;
+  }
+
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td{
+    display:block;
+    width:100%;
+  }
+
+  thead{
+    display:none;
+  }
+
+  tr{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    padding:12px;
+    margin-bottom:12px;
+    box-shadow:0 8px 22px rgba(0,0,0,0.04);
+  }
+
+  td{
+    border-bottom:1px solid #f1f5f9;
+    padding:10px 4px;
+    white-space:normal;
+    display:flex;
+    justify-content:space-between;
+    gap:14px;
+    font-size:13px;
+    line-height:1.4;
+  }
+
+  td:last-child{
+    border-bottom:none;
+  }
+
+  td::before{
+    content:attr(data-label);
+    font-weight:800;
+    color:#6b7280;
+    flex:0 0 42%;
+  }
+
+  td span,
+  td strong{
+    text-align:right;
+  }
+
+  .btn{
+    width:100%;
+    text-align:center;
+    justify-content:center;
+    margin-top:4px;
+  }
+
+  .quick-actions{
+    grid-template-columns:1fr;
+  }
+
+  #backToTop{
+    width:48px;
+    height:48px;
+    bottom:20px;
+    right:20px;
+  }
+}
+  
 </style>
 </head>
 
@@ -1027,13 +1145,13 @@ async function loadInterventions() {
     row.setAttribute("data-status", item.status || "en_attente");
 
     row.innerHTML = `
-      <td>${profile?.full_name || "Client inconnu"}</td>
-      <td>${deviceModel}</td>
-      <td>${deviceImei}</td>
-      <td>${item.problem_date ? new Date(item.problem_date).toLocaleDateString("fr-FR") : "-"}</td>
-      <td>${item.problem_type || "-"}</td>
-      <td><span class="status ${getStatusClass(item.status)}">${item.status || "en_attente"}</span></td>
-      <td>
+      <td data-label="Client">${profile?.full_name || "Client inconnu"}</td>
+<td data-label="Appareil">${deviceModel}</td>
+<td data-label="IMEI">${deviceImei}</td>
+<td data-label="Date">${item.problem_date ? new Date(item.problem_date).toLocaleDateString("fr-FR") : "-"}</td>
+<td data-label="Problème">${item.problem_type || "-"}</td>
+<td data-label="Statut"><span class="status ${getStatusClass(item.status)}">${item.status || "en_attente"}</span></td>
+<td data-label="Action">
         <a class="btn btn-purple" href="intervention-detail.html?id=${item.id}">
           Voir
         </a>
@@ -1173,12 +1291,12 @@ async function loadClients() {
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td>${client.full_name || "-"}</td>
-      <td>${client.phone || "-"}</td>
-      <td>${client.plan || "-"}</td>
-      <td><span class="status ${getClientStatusClass(client.status)}">${client.status || "en_attente"}</span></td>
-      <td>${client.imei || "-"}</td>
-      <td>
+     <td data-label="Client">${client.full_name || "-"}</td>
+<td data-label="Téléphone">${client.phone || "-"}</td>
+<td data-label="Formule">${client.plan || "-"}</td>
+<td data-label="Statut"><span class="status ${getClientStatusClass(client.status)}">${client.status || "en_attente"}</span></td>
+<td data-label="IMEI">${client.imei || "-"}</td>
+<td data-label="Action">
         <a class="btn btn-light" href="client-detail.html?id=${client.id}">
           Voir
         </a>
@@ -1228,12 +1346,12 @@ container.innerHTML = "";
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td>${client.full_name || "-"}</td>
-      <td>${client.phone || "-"}</td>
-      <td>${client.plan || "-"}</td>
-      <td><span class="status ${getClientStatusClass(client.status)}">${client.status || "en_attente"}</span></td>
-      <td>${client.imei || "-"}</td>
-      <td>
+      <td data-label="Client">${client.full_name || "-"}</td>
+<td data-label="Téléphone">${client.phone || "-"}</td>
+<td data-label="Formule">${client.plan || "-"}</td>
+<td data-label="Statut"><span class="status ${getClientStatusClass(client.status)}">${client.status || "en_attente"}</span></td>
+<td data-label="IMEI">${client.imei || "-"}</td>
+<td data-label="Action">
         <a class="btn btn-light" href="client-detail.html?id=${client.id}">
           Voir
         </a>
@@ -1295,11 +1413,12 @@ const visibleRequests = requests.slice(0, 5);
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td>${profile?.full_name || "Client inconnu"}</td>
-      <td>${getFieldLabel(request.field_name)}</td>
-      <td>${request.old_value || "-"}</td>
-      <td>${request.new_value || "-"}</td>
-      <td>
+      <td data-label="Client">${profile?.full_name || "Client inconnu"}</td>
+<td data-label="Champ">${getFieldLabel(request.field_name)}</td>
+<td data-label="Ancienne valeur">${request.old_value || "-"}</td>
+<td data-label="Nouvelle valeur">${request.new_value || "-"}</td>
+<td data-label="Statut">
+     <td data-label="Action">
         <span class="status ${getRequestStatusClass(request.status)}">
           ${request.status || "en_attente"}
         </span>
@@ -1445,12 +1564,13 @@ async function loadDeviceChangeRequests() {
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td>${profile?.full_name || "Client inconnu"}</td>
-      <td>${device?.phone_model || "-"} / ${device?.imei || "-"}</td>
-      <td>${getDeviceFieldLabel(request.field_name)}</td>
-      <td>${request.old_value || "-"}</td>
-      <td>${request.new_value || "-"}</td>
-      <td>
+      <td data-label="Client">${profile?.full_name || "Client inconnu"}</td>
+<td data-label="Appareil">${device?.phone_model || "-"} / ${device?.imei || "-"}</td>
+<td data-label="Champ">${getDeviceFieldLabel(request.field_name)}</td>
+<td data-label="Ancienne valeur">${request.old_value || "-"}</td>
+<td data-label="Nouvelle valeur">${request.new_value || "-"}</td>
+<td data-label="Statut">
+     <td data-label="Action">
         <span class="status ${getRequestStatusClass(request.status)}">
           ${request.status || "en_attente"}
         </span>
@@ -1709,14 +1829,14 @@ const visibleInterventions = interventions.slice(0, 5);
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td>${item.processed_at ? new Date(item.processed_at).toLocaleDateString("fr-FR") : "-"}</td>
-      <td>${profile?.full_name || "Client inconnu"}</td>
-      <td>${item.problem_type || "-"}</td>
-      <td>${formatMoney(repairCost)}</td>
-      <td>${formatMoney(coverage)}</td>
-      <td>${formatMoney(remainder)}</td>
-      <td><span class="status ${getStatusClass(item.status)}">${item.status || "en_attente"}</span></td>
-      <td>
+      <td data-label="Date">${item.processed_at ? new Date(item.processed_at).toLocaleDateString("fr-FR") : "-"}</td>
+<td data-label="Client">${profile?.full_name || "Client inconnu"}</td>
+<td data-label="Problème">${item.problem_type || "-"}</td>
+<td data-label="Coût">${formatMoney(repairCost)}</td>
+<td data-label="Pris en charge">${formatMoney(coverage)}</td>
+<td data-label="Reliquat">${formatMoney(remainder)}</td>
+<td data-label="Statut"><span class="status ${getStatusClass(item.status)}">${item.status || "en_attente"}</span></td>
+<td data-label="Action">
         <a class="btn btn-light" href="intervention-detail.html?id=${item.id}">
           Voir
         </a>
@@ -1912,33 +2032,33 @@ function displayAdminInvoices() {
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td>
-        <strong>${invoice.client_name || "Client inconnu"}</strong><br>
-        <span style="color:#6b7280;font-size:12px;">${invoice.client_email || ""}</span>
-      </td>
+  <td data-label="Client">
+    <strong>${invoice.client_name || "Client inconnu"}</strong><br>
+    <span style="color:#6b7280;font-size:12px;">${invoice.client_email || ""}</span>
+  </td>
 
-      <td>${invoice.target_label || "-"}</td>
-      <td>${getInvoiceTypeLabel(invoice.invoice_type)}</td>
-      <td>${invoice.plan || "-"}</td>
-      <td>${formatDate(invoice.due_date)}</td>
-      <td>${formatMoney(invoice.amount)}</td>
-      <td>${formatMoney(penalty)}</td>
-      <td><strong>${formatMoney(total)}</strong></td>
+  <td data-label="Appareil">${invoice.target_label || "-"}</td>
+  <td data-label="Type">${getInvoiceTypeLabel(invoice.invoice_type)}</td>
+  <td data-label="Formule">${invoice.plan || "-"}</td>
+  <td data-label="Échéance">${formatDate(invoice.due_date)}</td>
+  <td data-label="Montant">${formatMoney(invoice.amount)}</td>
+  <td data-label="Pénalité">${formatMoney(penalty)}</td>
+  <td data-label="Total"><strong>${formatMoney(total)}</strong></td>
 
-      <td>
-        <span class="status ${getInvoiceAdminStatusClass(invoice)}">
-          ${getInvoiceAdminStatusLabel(invoice)}
-        </span>
-      </td>
+  <td data-label="Statut">
+    <span class="status ${getInvoiceAdminStatusClass(invoice)}">
+      ${getInvoiceAdminStatusLabel(invoice)}
+    </span>
+  </td>
 
-      <td>${formatDateTime(invoice.paid_at)}</td>
+  <td data-label="Paiement">${formatDateTime(invoice.paid_at)}</td>
 
-      <td>
-        <a class="btn btn-light" href="client-detail.html?id=${invoice.user_id}">
-          Client
-        </a>
-      </td>
-    `;
+  <td data-label="Action">
+    <a class="btn btn-light" href="client-detail.html?id=${invoice.user_id}">
+      Client
+    </a>
+  </td>
+`;
 
     container.appendChild(row);
   });
