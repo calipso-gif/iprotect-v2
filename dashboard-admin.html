@@ -414,6 +414,55 @@ th{
     </table>
   </div>
 </section>
+
+ <section class="panel" id="section-factures">
+  <h2>Factures</h2>
+
+  <div class="filters">
+    <input type="text" id="search-invoice-client" placeholder="Rechercher par client...">
+
+    <select id="filter-invoice-status">
+      <option value="all">Tous les statuts</option>
+      <option value="unpaid">Non réglées</option>
+      <option value="paid">Payées</option>
+      <option value="late">En retard</option>
+    </select>
+
+    <input type="date" id="invoice-start-date">
+    <input type="date" id="invoice-end-date">
+
+    <button class="btn btn-purple" onclick="displayAdminInvoices()">
+      Filtrer
+    </button>
+
+    <button class="btn btn-light" onclick="resetInvoiceFilters()">
+      Réinitialiser
+    </button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Appareil</th>
+          <th>Type</th>
+          <th>Formule</th>
+          <th>Échéance</th>
+          <th>Montant</th>
+          <th>Pénalité</th>
+          <th>Total</th>
+          <th>Statut</th>
+          <th>Paiement</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="admin-invoices-list"></tbody>
+    </table>
+  </div>
+</section>
+      
 <section class="panel" id="section-change-requests">
   <h2>Demandes de modification client</h2>
 
@@ -581,7 +630,9 @@ th{
     Voir tous les clients
   </a>
 
-  <button class="secondary">Voir les paiements</button>
+  <a href="#section-factures" class="secondary quick-link">
+  Voir les factures
+</a>
 
   <a href="#section-interventions" class="secondary quick-link">
     Voir les interventions
@@ -897,6 +948,7 @@ loadAllClients();
 loadChangeRequests();
 loadDeviceChangeRequests();
 loadRecentPayments();
+loadAdminInvoices();
 loadPerformances();
 }
 
@@ -1688,6 +1740,231 @@ const visibleInterventions = interventions.slice(0, 5);
 }
 
 /* =========================
+   FACTURES ADMIN
+========================= */
+
+let allAdminInvoicesData = [];
+
+function formatDate(value) {
+  if (!value) return "-";
+  return new Date(value).toLocaleDateString("fr-FR");
+}
+
+function formatDateTime(value) {
+  if (!value) return "-";
+  return new Date(value).toLocaleString("fr-FR");
+}
+
+function getInvoiceTypeLabel(type) {
+  if (type === "activation") return "Activation";
+  if (type === "subscription") return "Mensuelle";
+  return type || "-";
+}
+
+function getInvoiceAdminStatus(invoice) {
+  if (invoice.status === "paid") return "paid";
+
+  const today = new Date();
+  const due = new Date(invoice.due_date);
+
+  today.setHours(0, 0, 0, 0);
+  due.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.floor((today - due) / (1000 * 60 * 60 * 24));
+
+  if (diffDays > 15 && invoice.invoice_type !== "activation") return "late";
+
+  return "unpaid";
+}
+
+function getInvoiceAdminStatusLabel(invoice) {
+  const status = getInvoiceAdminStatus(invoice);
+
+  if (status === "paid") return "Payée";
+  if (status === "late") return "En retard";
+  return "Non réglée";
+}
+
+function getInvoiceAdminStatusClass(invoice) {
+  const status = getInvoiceAdminStatus(invoice);
+
+  if (status === "paid") return "active";
+  if (status === "late") return "suspended";
+  return "pending";
+}
+
+function calculateInvoicePenalty(invoice) {
+  if (!invoice || !invoice.due_date) return 0;
+
+  // Aucune pénalité sur les factures d’activation
+  if (invoice.invoice_type === "activation") return 0;
+
+  const today = new Date();
+  const due = new Date(invoice.due_date);
+
+  today.setHours(0, 0, 0, 0);
+  due.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.floor((today - due) / (1000 * 60 * 60 * 24));
+  const penaltyDays = Math.max(diffDays - 15, 0);
+
+  return penaltyDays * 100;
+}
+
+async function loadAdminInvoices() {
+  const { data: invoices, error } = await supabaseClient
+    .from("invoices")
+    .select("*")
+    .order("due_date", { ascending: false });
+
+  if (error) {
+    alert("Erreur chargement factures : " + error.message);
+    return;
+  }
+
+  const enrichedInvoices = [];
+
+  for (const invoice of invoices || []) {
+    const { data: profile } = await supabaseClient
+      .from("profiles")
+      .select("full_name, email")
+      .eq("id", invoice.user_id)
+      .single();
+
+    enrichedInvoices.push({
+      ...invoice,
+      client_name: profile?.full_name || "Client inconnu",
+      client_email: profile?.email || ""
+    });
+  }
+
+  allAdminInvoicesData = enrichedInvoices;
+  displayAdminInvoices();
+}
+
+function displayAdminInvoices() {
+  const container = document.getElementById("admin-invoices-list");
+  if (!container) return;
+
+  const search = document.getElementById("search-invoice-client").value.toLowerCase();
+  const statusFilter = document.getElementById("filter-invoice-status").value;
+  const startDate = document.getElementById("invoice-start-date").value;
+  const endDate = document.getElementById("invoice-end-date").value;
+
+  let filtered = [...allAdminInvoicesData];
+
+  if (search) {
+    filtered = filtered.filter(invoice =>
+      (invoice.client_name || "").toLowerCase().includes(search) ||
+      (invoice.client_email || "").toLowerCase().includes(search)
+    );
+  }
+
+  if (statusFilter !== "all") {
+    filtered = filtered.filter(invoice => getInvoiceAdminStatus(invoice) === statusFilter);
+  }
+
+  if (startDate) {
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+
+    filtered = filtered.filter(invoice => {
+      if (!invoice.due_date) return false;
+      return new Date(invoice.due_date) >= start;
+    });
+  }
+
+  if (endDate) {
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    filtered = filtered.filter(invoice => {
+      if (!invoice.due_date) return false;
+      return new Date(invoice.due_date) <= end;
+    });
+  }
+
+  const totalResults = filtered.length;
+  filtered = filtered.slice(0, 5);
+
+  container.innerHTML = "";
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <tr>
+        <td colspan="11">Aucune facture trouvée.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  filtered.forEach(invoice => {
+    const status = getInvoiceAdminStatus(invoice);
+
+    const penalty = status === "paid"
+      ? Number(invoice.penalty_amount || 0)
+      : calculateInvoicePenalty(invoice);
+
+    const total = status === "paid"
+      ? Number(invoice.total_amount || invoice.amount || 0)
+      : Number(invoice.amount || 0) + penalty;
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>
+        <strong>${invoice.client_name || "Client inconnu"}</strong><br>
+        <span style="color:#6b7280;font-size:12px;">${invoice.client_email || ""}</span>
+      </td>
+
+      <td>${invoice.target_label || "-"}</td>
+      <td>${getInvoiceTypeLabel(invoice.invoice_type)}</td>
+      <td>${invoice.plan || "-"}</td>
+      <td>${formatDate(invoice.due_date)}</td>
+      <td>${formatMoney(invoice.amount)}</td>
+      <td>${formatMoney(penalty)}</td>
+      <td><strong>${formatMoney(total)}</strong></td>
+
+      <td>
+        <span class="status ${getInvoiceAdminStatusClass(invoice)}">
+          ${getInvoiceAdminStatusLabel(invoice)}
+        </span>
+      </td>
+
+      <td>${formatDateTime(invoice.paid_at)}</td>
+
+      <td>
+        <a class="btn btn-light" href="client-detail.html?id=${invoice.user_id}">
+          Client
+        </a>
+      </td>
+    `;
+
+    container.appendChild(row);
+  });
+
+  if (totalResults > 5) {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td colspan="11" style="text-align:center;color:#6b7280;font-size:13px;">
+        ${totalResults - 5} autre(s) facture(s) masquée(s). Utilisez les filtres pour affiner la recherche.
+      </td>
+    `;
+
+    container.appendChild(row);
+  }
+}
+
+function resetInvoiceFilters() {
+  document.getElementById("search-invoice-client").value = "";
+  document.getElementById("filter-invoice-status").value = "all";
+  document.getElementById("invoice-start-date").value = "";
+  document.getElementById("invoice-end-date").value = "";
+  displayAdminInvoices();
+}  
+
+/* =========================
    EVENTS
 ========================= */
 
@@ -1696,6 +1973,11 @@ document.getElementById("filter-client-status").addEventListener("change", displ
 
 document.getElementById("search-intervention-client").addEventListener("input", filterInterventions);
 document.getElementById("filter-intervention-status").addEventListener("change", filterInterventions);
+
+document.getElementById("search-invoice-client").addEventListener("input", displayAdminInvoices);
+document.getElementById("filter-invoice-status").addEventListener("change", displayAdminInvoices);
+document.getElementById("invoice-start-date").addEventListener("change", displayAdminInvoices);
+document.getElementById("invoice-end-date").addEventListener("change", displayAdminInvoices);  
 
 /* =========================
    DÉMARRAGE
