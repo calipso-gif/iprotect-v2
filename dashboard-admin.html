@@ -2023,13 +2023,17 @@ function displayAdminInvoices() {
   filtered.forEach(invoice => {
     const status = getInvoiceAdminStatus(invoice);
 
-    const penalty = status === "paid"
-      ? Number(invoice.penalty_amount || 0)
-      : calculateInvoicePenalty(invoice);
+    const penalty = invoice.invoice_type === "activation"
+  ? 0
+  : status === "paid"
+    ? Number(invoice.penalty_amount || 0)
+    : calculateInvoicePenalty(invoice);
 
-    const total = status === "paid"
-      ? Number(invoice.total_amount || invoice.amount || 0)
-      : Number(invoice.amount || 0) + penalty;
+const total = invoice.invoice_type === "activation"
+  ? Number(invoice.amount || 0)
+  : status === "paid"
+    ? Number(invoice.total_amount || invoice.amount || 0)
+    : Number(invoice.amount || 0) + penalty;
 
     const row = document.createElement("tr");
 
