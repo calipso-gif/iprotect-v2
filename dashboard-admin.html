@@ -1412,33 +1412,34 @@ const visibleRequests = requests.slice(0, 5);
 
     const row = document.createElement("tr");
 
-    row.innerHTML = `
-      <td data-label="Client">${profile?.full_name || "Client inconnu"}</td>
-<td data-label="Champ">${getFieldLabel(request.field_name)}</td>
-<td data-label="Ancienne valeur">${request.old_value || "-"}</td>
-<td data-label="Nouvelle valeur">${request.new_value || "-"}</td>
-<td data-label="Statut">
-     <td data-label="Action">
-        <span class="status ${getRequestStatusClass(request.status)}">
-          ${request.status || "en_attente"}
-        </span>
-      </td>
-      <td>
-        ${
-          request.status === "en_attente"
-          ? `
-            <button class="btn btn-green" onclick="approveChangeRequest('${request.id}', '${request.user_id}', '${request.field_name}', '${request.new_value}')">
-              Approuver
-            </button>
+   row.innerHTML = `
+  <td data-label="Client">${profile?.full_name || "Client inconnu"}</td>
+  <td data-label="Champ">${getFieldLabel(request.field_name)}</td>
+  <td data-label="Ancienne valeur">${request.old_value || "-"}</td>
+  <td data-label="Nouvelle valeur">${request.new_value || "-"}</td>
 
-            <button class="btn btn-red" onclick="rejectChangeRequest('${request.id}')">
-              Refuser
-            </button>
-          `
-          : "-"
-        }
-      </td>
-    `;
+  <td data-label="Statut">
+    <span class="status ${getRequestStatusClass(request.status)}">
+      ${request.status || "en_attente"}
+    </span>
+  </td>
+
+  <td data-label="Action">
+    ${
+      request.status === "en_attente"
+      ? `
+        <button class="btn btn-green" onclick="approveChangeRequest('${request.id}', '${request.user_id}', '${request.field_name}', '${request.new_value}')">
+          Approuver
+        </button>
+
+        <button class="btn btn-red" onclick="rejectChangeRequest('${request.id}')">
+          Refuser
+        </button>
+      `
+      : "-"
+    }
+  </td>
+`;
 
     container.appendChild(row);
   }
@@ -1563,34 +1564,35 @@ async function loadDeviceChangeRequests() {
 
     const row = document.createElement("tr");
 
-    row.innerHTML = `
-      <td data-label="Client">${profile?.full_name || "Client inconnu"}</td>
-<td data-label="Appareil">${device?.phone_model || "-"} / ${device?.imei || "-"}</td>
-<td data-label="Champ">${getDeviceFieldLabel(request.field_name)}</td>
-<td data-label="Ancienne valeur">${request.old_value || "-"}</td>
-<td data-label="Nouvelle valeur">${request.new_value || "-"}</td>
-<td data-label="Statut">
-     <td data-label="Action">
-        <span class="status ${getRequestStatusClass(request.status)}">
-          ${request.status || "en_attente"}
-        </span>
-      </td>
-      <td>
-        ${
-          request.status === "en_attente"
-          ? `
-            <button class="btn btn-green" onclick="approveDeviceChangeRequest('${request.id}', '${request.device_id}', '${request.field_name}', '${request.new_value}')">
-              Approuver
-            </button>
+   row.innerHTML = `
+  <td data-label="Client">${profile?.full_name || "Client inconnu"}</td>
+  <td data-label="Appareil">${device?.phone_model || "-"} / ${device?.imei || "-"}</td>
+  <td data-label="Champ">${getDeviceFieldLabel(request.field_name)}</td>
+  <td data-label="Ancienne valeur">${request.old_value || "-"}</td>
+  <td data-label="Nouvelle valeur">${request.new_value || "-"}</td>
 
-            <button class="btn btn-red" onclick="rejectDeviceChangeRequest('${request.id}')">
-              Refuser
-            </button>
-          `
-          : "-"
-        }
-      </td>
-    `;
+  <td data-label="Statut">
+    <span class="status ${getRequestStatusClass(request.status)}">
+      ${request.status || "en_attente"}
+    </span>
+  </td>
+
+  <td data-label="Action">
+    ${
+      request.status === "en_attente"
+      ? `
+        <button class="btn btn-green" onclick="approveDeviceChangeRequest('${request.id}', '${request.device_id}', '${request.field_name}', '${request.new_value}')">
+          Approuver
+        </button>
+
+        <button class="btn btn-red" onclick="rejectDeviceChangeRequest('${request.id}')">
+          Refuser
+        </button>
+      `
+      : "-"
+    }
+  </td>
+`;
 
     container.appendChild(row);
   }
