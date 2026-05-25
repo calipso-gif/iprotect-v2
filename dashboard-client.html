@@ -196,7 +196,193 @@ th{
 }
 
 @media(max-width:900px){
-  .grid{grid-template-columns:1fr;}
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+  body{
+    background:#f8fafc;
+  }
+
+  .header{
+    padding:12px 14px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:white;
+  }
+
+  .logo{
+    width:100%;
+    justify-content:flex-start;
+  }
+
+  .logo-box{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+  }
+
+  .header > div:last-child{
+    width:100%;
+    display:grid !important;
+    grid-template-columns:1fr;
+    gap:10px !important;
+    align-items:stretch !important;
+  }
+
+  .user{
+    width:100%;
+    background:#f9fafb;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:11px 12px;
+    font-size:14px;
+  }
+
+  .header .btn{
+    width:100%;
+    padding:12px;
+  }
+
+  .container{
+    padding:15px;
+  }
+
+  .hero{
+    padding:22px;
+    border-radius:22px;
+    margin-bottom:18px;
+  }
+
+  .hero h1{
+    font-size:25px;
+    line-height:1.15;
+  }
+
+  .hero p{
+    font-size:14px;
+  }
+
+  .cards{
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:18px;
+  }
+
+  .card{
+    padding:16px;
+    border-radius:18px;
+  }
+
+  .card h3{
+    font-size:12px;
+  }
+
+  .card p{
+    font-size:16px;
+  }
+
+  .status{
+    font-size:12px;
+    padding:6px 10px;
+  }
+
+  .actions{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+    margin-bottom:20px;
+  }
+
+  .btn{
+    width:100%;
+    padding:15px;
+    border-radius:16px;
+    font-size:14px;
+  }
+
+  .panel{
+    padding:18px;
+    border-radius:20px;
+    margin-bottom:18px;
+  }
+
+  .panel h2{
+    font-size:19px;
+  }
+
+  .device-card{
+    border-radius:18px;
+    padding:16px;
+    line-height:1.7;
+  }
+
+  .table-wrap{
+    overflow:visible;
+    border:none;
+  }
+
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td{
+    display:block;
+    width:100%;
+  }
+
+  thead{
+    display:none;
+  }
+
+  tr{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    padding:12px;
+    margin-bottom:12px;
+    box-shadow:0 8px 22px rgba(0,0,0,0.04);
+  }
+
+  td{
+    border-bottom:1px solid #f1f5f9;
+    padding:10px 4px;
+    white-space:normal;
+    display:flex;
+    justify-content:space-between;
+    gap:14px;
+    font-size:13px;
+    line-height:1.4;
+  }
+
+  td:last-child{
+    border-bottom:none;
+  }
+
+  td::before{
+    content:attr(data-label);
+    font-weight:800;
+    color:#6b7280;
+    flex:0 0 42%;
+  }
+
+  td span,
+  td strong{
+    text-align:right;
+  }
+}
+
+@media(max-width:420px){
+  .cards{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -366,7 +552,10 @@ async function checkUser() {
   }
 
   currentUserId = user.id;
-  loadProfile(user.id);
+
+await refreshPaymentStatuses();
+
+loadProfile(user.id);
 loadClientInterventions(user.id);
 loadDevices(user.id);
 }
@@ -451,12 +640,14 @@ async function loadClientInterventions(userId) {
   interventions.forEach(item => {
     const row = document.createElement("tr");
 
-    row.innerHTML = `
-      <td>${formatDate(item.problem_date)}</td>
-      <td>${item.problem_type || "-"}</td>
-      <td>${item.description || "-"}</td>
-      <td><span class="status ${getStatusClass(item.status)}">${item.status || "en_attente"}</span></td>
-    `;
+   row.innerHTML = `
+  <td data-label="Date">${formatDate(item.problem_date)}</td>
+  <td data-label="Problème">${item.problem_type || "-"}</td>
+  <td data-label="Description">${item.description || "-"}</td>
+  <td data-label="Statut">
+    <span class="status ${getStatusClass(item.status)}">${item.status || "en_attente"}</span>
+  </td>
+`;
 
     container.appendChild(row);
   });
@@ -498,14 +689,16 @@ async function loadDevices(userId) {
   devices.forEach(device => {
     const row = document.createElement("tr");
 
-    row.innerHTML = `
-  <td>${device.phone_model || "-"}</td>
-  <td>${device.imei || "-"}</td>
-  <td>${device.plan || "-"}</td>
-  <td>${(device.initial_ceiling || 0).toLocaleString("fr-FR")} FCFA</td>
-  <td>${(device.remaining_ceiling || 0).toLocaleString("fr-FR")} FCFA</td>
-  <td>${formatDate(device.next_payment_date)}</td>
-  <td><span class="status ${getStatusClass(device.status)}">${device.status || "en_attente"}</span></td>
+   row.innerHTML = `
+  <td data-label="Modèle">${device.phone_model || "-"}</td>
+  <td data-label="IMEI">${device.imei || "-"}</td>
+  <td data-label="Formule">${device.plan || "-"}</td>
+  <td data-label="Plafond initial">${(device.initial_ceiling || 0).toLocaleString("fr-FR")} FCFA</td>
+  <td data-label="Plafond restant">${(device.remaining_ceiling || 0).toLocaleString("fr-FR")} FCFA</td>
+  <td data-label="Prochain paiement">${formatDate(device.next_payment_date)}</td>
+  <td data-label="Statut">
+    <span class="status ${getStatusClass(device.status)}">${device.status || "en_attente"}</span>
+  </td>
 `;
 
     container.appendChild(row);
